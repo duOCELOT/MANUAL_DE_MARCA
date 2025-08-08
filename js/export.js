@@ -755,3 +755,15 @@ window.exportPDF = exportPDF;
 
 // Debug
 BrandManualUtils.devLog('Export system loaded - HTML and PDF ready!');
+
+
+window.BrandManualExport = {
+    exportHTML: exportHTML,
+    exportPDF: exportPDF
+};
+
+// Funções globais para compatibilidade
+window.exportHTML = exportHTML;
+window.exportPDF = exportPDF;
+
+console.log('Export functions loaded successfully');

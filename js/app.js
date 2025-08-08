@@ -619,3 +619,4 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 BrandManualUtils.devLog('App.js carregado com sucesso');
+
