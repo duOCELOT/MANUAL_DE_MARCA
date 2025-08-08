@@ -1,9 +1,9 @@
 /**
- * Sistema de Exportação do Manual da Marca
+ * Sistema de Exportação HTML - Versão Corrigida
  */
 
 /**
- * Exportar como HTML completo
+ * Exportar como HTML completo - VERSÃO CORRIGIDA
  */
 function exportHTML() {
     BrandManualUtils.showLoading();
@@ -13,300 +13,52 @@ function exportHTML() {
         const logoImg = document.querySelector('#logoPreview img');
         const logoSrc = logoImg ? logoImg.src : '';
         
-        const htmlContent = generateCompleteHTML(data, logoSrc);
+        // Gerar HTML corrigido
+        const htmlContent = generateFixedHTML(data, logoSrc);
         const filename = `manual-marca-${BrandManualUtils.generateSlug(data.hotelName || 'hotel')}.html`;
         
-        const blob = new Blob([htmlContent], { type: 'text/html;charset=utf-8' });
-        BrandManualStorage.downloadFile(blob, filename);
+        // Download do arquivo
+        downloadHTMLFile(htmlContent, filename);
         
-        BrandManualUtils.showSuccess('Manual exportado como HTML!');
+        BrandManualUtils.showSuccess('Manual HTML exportado com sucesso!');
         BrandManualUtils.devLog('HTML exportado', filename);
     } catch (error) {
         BrandManualUtils.devLog('Erro ao exportar HTML', error);
-        BrandManualUtils.showError('Erro ao exportar HTML. Tente novamente.');
+        BrandManualUtils.showError('Erro ao exportar HTML: ' + error.message);
     } finally {
         BrandManualUtils.hideLoading();
     }
 }
 
 /**
- * Exportar como PDF (via print)
+ * Gerar HTML completo e funcional
  */
-function exportPDF() {
-    BrandManualUtils.showLoading();
-    
-    try {
-        const data = BrandManualStorage.collectFormData();
-        const pdfHTML = generatePDFHTML(data);
-        
-        const printWindow = window.open('', '_blank', 'width=800,height=600');
-        if (printWindow) {
-            printWindow.document.write(pdfHTML);
-            printWindow.document.close();
-            BrandManualUtils.showSuccess('Janela de impressão aberta!');
-            BrandManualUtils.devLog('PDF/Print gerado');
-        } else {
-            BrandManualUtils.showError('Pop-up bloqueado! Permita pop-ups para usar esta função.');
-        }
-    } catch (error) {
-        BrandManualUtils.devLog('Erro ao gerar PDF', error);
-        BrandManualUtils.showError('Erro ao gerar PDF. Tente novamente.');
-    } finally {
-        BrandManualUtils.hideLoading();
-    }
-}
-
-/**
- * Gerar HTML completo do manual
- */
-function generateCompleteHTML(data, logoSrc) {
-    return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manual da Marca - ${BrandManualUtils.escapeHtml(data.hotelName || 'Hotel')}</title>
-    <style>
-        ${getExportStyles(data)}
-    </style>
-</head>
-<body>
-    <div class="container">
-        ${generateExportHeader(data)}
-        ${generateTableOfContents()}
-        ${generateExportContent(data, logoSrc)}
-        ${generateExportFooter(data)}
-    </div>
-    
-    <script>
-        ${getExportScript(data)}
-    </script>
-</body>
-</html>`;
-}
-
-/**
- * Obter estilos CSS para exportação
- */
-function getExportStyles(data) {
+function generateFixedHTML(data, logoSrc) {
     const colors = {
         primary: data.primaryColor || '#2c3e50',
         secondary: data.secondaryColor || '#3498db',
         accent: data.accentColor || '#e74c3c'
     };
     
-    return `
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body { 
-            font-family: 'Arial', sans-serif; 
-            line-height: 1.6; 
-            color: #2c3e50; 
-            background: #f8f9fa;
-        }
-        
-        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
-        
-        .header { 
-            text-align: center; 
-            margin-bottom: 40px; 
-            padding: 40px; 
-            background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
-            color: white; 
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-        
-        .header h1 { font-size: 2.5rem; margin-bottom: 10px; }
-        .header h2 { border: none; color: white; margin: 10px 0; }
-        .header p { opacity: 0.9; margin-top: 10px; }
-        
-        .toc { 
-            background: #f8f9fa; 
-            padding: 25px; 
-            border-radius: 8px; 
-            margin-bottom: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .toc h2 { 
-            color: ${colors.primary}; 
-            border-bottom: 3px solid ${colors.secondary}; 
-            padding-bottom: 10px; 
-            margin-bottom: 20px;
-        }
-        
-        .toc ul { list-style: none; columns: 2; column-gap: 30px; }
-        .toc li { margin: 8px 0; break-inside: avoid; }
-        .toc a { 
-            color: ${colors.primary}; 
-            text-decoration: none; 
-            font-weight: 500;
-            padding: 5px 0;
-            display: block;
-            transition: color 0.3s;
-        }
-        .toc a:hover { color: ${colors.secondary}; text-decoration: underline; }
-        
-        .section { 
-            background: white; 
-            margin-bottom: 30px; 
-            padding: 30px; 
-            border-radius: 12px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            page-break-inside: avoid;
-        }
-        
-        h2 { 
-            color: ${colors.primary}; 
-            border-bottom: 3px solid ${colors.secondary}; 
-            padding-bottom: 10px; 
-            margin-bottom: 25px; 
-            font-size: 1.8rem;
-        }
-        
-        h3 { color: ${colors.primary}; margin: 20px 0 15px 0; }
-        
-        .grid { display: grid; gap: 20px; margin: 20px 0; }
-        .grid-2 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
-        .grid-3 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        
-        .info-box { 
-            background: rgba(52, 152, 219, 0.1); 
-            padding: 20px; 
-            border-radius: 8px; 
-            margin: 15px 0;
-            border-left: 4px solid ${colors.secondary};
-        }
-        
-        .value-item { 
-            background: rgba(231, 76, 60, 0.08); 
-            padding: 20px; 
-            margin: 15px 0;
-            border-radius: 8px; 
-            border-left: 4px solid ${colors.accent};
-        }
-        
-        .color-swatch { 
-            display: inline-block;
-            width: 100px; 
-            height: 60px; 
-            margin: 10px 10px 10px 0; 
-            border-radius: 8px; 
-            text-align: center; 
-            line-height: 60px; 
-            color: white; 
-            font-weight: bold;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        }
-        
-        .logo-container { text-align: center; margin: 30px 0; }
-        .logo-container img { max-width: 300px; max-height: 150px; border-radius: 8px; }
-        
-        .contact-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
-            gap: 20px; 
-        }
-        
-        .contact-item { 
-            background: #f8f9fa; 
-            padding: 20px; 
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
-        }
-        
-        .social-links { 
-            display: flex; 
-            gap: 15px; 
-            flex-wrap: wrap; 
-            margin: 15px 0; 
-            justify-content: center;
-        }
-        
-        .social-item { 
-            background: ${colors.secondary}; 
-            color: white; 
-            padding: 10px 20px; 
-            border-radius: 25px; 
-            text-decoration: none;
-            font-weight: 500;
-        }
-        
-        .guidelines-box {
-            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
-            border: 1px solid #27ae60;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-        
-        .guidelines-box h4 {
-            color: #27ae60;
-            margin-bottom: 10px;
-        }
-        
-        .guidelines-box ul {
-            margin-left: 20px;
-        }
-        
-        .guidelines-box li {
-            margin: 5px 0;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            padding: 30px;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 8px;
-            text-align: center;
-            border: 2px solid ${colors.secondary};
-        }
-        
-        @media print {
-            body { background: white; }
-            .section { 
-                box-shadow: none; 
-                border: 1px solid #ddd; 
-                page-break-inside: avoid;
-                margin-bottom: 20px;
-            }
-            .header { background: ${colors.primary} !important; }
-            .toc { page-break-after: always; }
-        }
-        
-        @media (max-width: 768px) {
-            .container { padding: 10px; }
-            .header { padding: 30px 20px; }
-            .header h1 { font-size: 2rem; }
-            .section { padding: 20px; }
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
-            .toc ul { columns: 1; }
-        }
-    `;
-}
-
-/**
- * Gerar header para exportação
- */
-function generateExportHeader(data) {
-    return `
+    return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual da Marca - ${escapeHtmlFixed(data.hotelName || 'Hotel')}</title>
+    <style>
+        ${getFixedCSS(colors)}
+    </style>
+</head>
+<body>
+    <div class="container">
         <div class="header">
             <h1>📋 MANUAL DA MARCA</h1>
-            <h2>${BrandManualUtils.escapeHtml(data.hotelName || '[NOME DO HOTEL]')}</h2>
+            <h2>${escapeHtmlFixed(data.hotelName || '[NOME DO HOTEL]')}</h2>
             <p>Diretrizes de Identidade Visual e Comunicação</p>
-            <p style="font-size: 0.9rem; margin-top: 15px;">
-                Gerado em ${BrandManualUtils.formatDate()} • Versão 1.0
-            </p>
+            <p class="meta">Gerado em ${new Date().toLocaleDateString('pt-BR')} • Versão 1.0</p>
         </div>
-    `;
-}
 
-/**
- * Gerar índice
- */
-function generateTableOfContents() {
-    return `
         <div class="toc">
             <h2>📖 Índice</h2>
             <ul>
@@ -321,100 +73,415 @@ function generateTableOfContents() {
                 <li><a href="#contatos">9. Contatos</a></li>
             </ul>
         </div>
-    `;
+
+        ${generateFixedSections(data, logoSrc, colors)}
+
+        <div class="footer">
+            <h3>📝 Informações do Manual</h3>
+            <p><strong>Versão:</strong> 1.0</p>
+            <p><strong>Data de Criação:</strong> ${new Date().toLocaleDateString('pt-BR')}</p>
+            <p><strong>Próxima Revisão:</strong> ${new Date(Date.now() + 365*24*60*60*1000).toLocaleDateString('pt-BR')}</p>
+            <p class="disclaimer">Este manual é um documento vivo e deve ser atualizado sempre que houver mudanças na identidade visual da marca.</p>
+        </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">🖨️ Imprimir</button>
+
+    <script>
+        ${getFixedJavaScript()}
+    </script>
+</body>
+</html>`;
 }
 
 /**
- * Gerar conteúdo completo para exportação
+ * CSS fixo e funcional
  */
-function generateExportContent(data, logoSrc) {
+function getFixedCSS(colors) {
     return `
-        ${generateBasicInfoSection(data)}
-        ${generateIdentitySection(data)}
-        ${generateLogoSection(data, logoSrc)}
-        ${generateColorsSection(data)}
-        ${generateTypographySection(data)}
-        ${generateVoiceSection(data)}
-        ${generateApplicationsSection(data)}
-        ${generateSocialSection(data)}
-        ${generateContactSection(data)}
+        /* Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Layout */
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px;
+            background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 300;
+        }
+
+        .header h2 {
+            font-size: 2rem;
+            margin: 15px 0;
+            border: none;
+            color: white;
+        }
+
+        .header p {
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+
+        .meta {
+            font-size: 0.9rem;
+            margin-top: 15px !important;
+        }
+
+        /* Índice */
+        .toc {
+            background: #f8f9fa;
+            padding: 30px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .toc h2 {
+            color: ${colors.primary};
+            border-bottom: 3px solid ${colors.secondary};
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .toc ul {
+            list-style: none;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        .toc li {
+            margin: 8px 0;
+            break-inside: avoid;
+        }
+
+        .toc a {
+            color: ${colors.primary};
+            text-decoration: none;
+            font-weight: 500;
+            padding: 5px 0;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .toc a:hover {
+            color: ${colors.secondary};
+            text-decoration: underline;
+        }
+
+        /* Seções */
+        .section {
+            padding: 40px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        h2 {
+            color: ${colors.primary};
+            border-bottom: 3px solid ${colors.secondary};
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            color: ${colors.primary};
+            margin: 20px 0 15px 0;
+            font-size: 1.3rem;
+        }
+
+        h4 {
+            color: ${colors.primary};
+            margin: 15px 0 10px 0;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .grid-3 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        /* Info boxes */
+        .info-box {
+            background: rgba(52, 152, 219, 0.08);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            border-left: 5px solid ${colors.secondary};
+        }
+
+        .value-item {
+            background: rgba(231, 76, 60, 0.08);
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 5px solid ${colors.accent};
+        }
+
+        /* Logo */
+        .logo-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .logo-container img {
+            max-width: 300px;
+            max-height: 150px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Cores */
+        .color-swatches {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .color-swatch {
+            width: 120px;
+            height: 80px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .color-swatch small {
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        /* Guidelines */
+        .guidelines-box {
+            background: linear-gradient(135deg, #e8f5e8, #f0f8f0);
+            border: 1px solid #27ae60;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .guidelines-box h4 {
+            color: #27ae60;
+            margin-bottom: 15px;
+        }
+
+        .guidelines-box ul {
+            margin-left: 20px;
+        }
+
+        .guidelines-box li {
+            margin: 8px 0;
+        }
+
+        /* Social */
+        .social-links {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .social-item {
+            background: ${colors.secondary};
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: transform 0.3s;
+        }
+
+        .social-item:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Contatos */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .contact-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            text-align: center;
+            border-top: 3px solid ${colors.secondary};
+        }
+
+        .footer h3 {
+            margin-bottom: 20px;
+        }
+
+        .disclaimer {
+            margin-top: 20px;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        /* Print button */
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: all 0.3s;
+        }
+
+        .print-btn:hover {
+            background: #219a52;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 2rem; }
+            .section { padding: 25px; }
+            .toc { padding: 20px; }
+            .toc ul { columns: 1; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .color-swatches { justify-content: center; }
+            .social-links { justify-content: center; }
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; }
+            .print-btn { display: none !important; }
+            .section { page-break-inside: avoid; }
+            .toc { page-break-after: always; }
+        }
     `;
 }
 
 /**
- * Seção Informações Básicas
+ * Gerar seções do manual
  */
-function generateBasicInfoSection(data) {
+function generateFixedSections(data, logoSrc, colors) {
     return `
         <section class="section" id="info-basicas">
             <h2>🏢 1. Informações Básicas</h2>
             <div class="grid grid-2">
                 <div class="info-box">
                     <h3>Nome do Hotel</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.hotelName) || '[A PREENCHER]'}</strong></p>
+                    <p><strong>${escapeHtmlFixed(data.hotelName) || '[A PREENCHER]'}</strong></p>
                 </div>
                 <div class="info-box">
                     <h3>Tipo/Conceito</h3>
-                    <p>${BrandManualUtils.escapeHtml(data.hotelType) || '[A PREENCHER]'}</p>
+                    <p>${escapeHtmlFixed(data.hotelType) || '[A PREENCHER]'}</p>
                 </div>
                 <div class="info-box">
                     <h3>Localização</h3>
-                    <p>${BrandManualUtils.escapeHtml(data.hotelLocation) || '[A PREENCHER]'}</p>
+                    <p>${escapeHtmlFixed(data.hotelLocation) || '[A PREENCHER]'}</p>
                 </div>
                 <div class="info-box">
                     <h3>Website</h3>
-                    <p>${data.hotelWebsite ? `<a href="${BrandManualUtils.escapeHtml(data.hotelWebsite)}" target="_blank">${BrandManualUtils.escapeHtml(data.hotelWebsite)}</a>` : '[A PREENCHER]'}</p>
+                    <p>${data.hotelWebsite ? `<a href="${escapeHtmlFixed(data.hotelWebsite)}" target="_blank">${escapeHtmlFixed(data.hotelWebsite)}</a>` : '[A PREENCHER]'}</p>
                 </div>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Identidade da Marca
- */
-function generateIdentitySection(data) {
-    return `
         <section class="section" id="identidade">
             <h2>🎯 2. Identidade da Marca</h2>
             
             <div class="info-box">
                 <h3>Missão</h3>
-                <p>${BrandManualUtils.escapeHtml(data.mission) || '[A PREENCHER: Por que seu hotel existe? Qual é o propósito?]'}</p>
+                <p>${escapeHtmlFixed(data.mission) || '[A PREENCHER: Por que seu hotel existe? Qual é o propósito?]'}</p>
             </div>
 
             <div class="info-box">
                 <h3>Visão</h3>
-                <p>${BrandManualUtils.escapeHtml(data.vision) || '[A PREENCHER: Onde seu hotel quer chegar? Quais são as aspirações?]'}</p>
+                <p>${escapeHtmlFixed(data.vision) || '[A PREENCHER: Onde seu hotel quer chegar? Quais são as aspirações?]'}</p>
             </div>
 
             <div class="info-box">
                 <h3>Posicionamento</h3>
-                <p>${BrandManualUtils.escapeHtml(data.positioning) || '[A PREENCHER: Como seu hotel quer ser percebido no mercado?]'}</p>
+                <p>${escapeHtmlFixed(data.positioning) || '[A PREENCHER: Como seu hotel quer ser percebido no mercado?]'}</p>
             </div>
 
             <h3>Valores da Marca</h3>
             <div class="value-item">
-                <h4>${BrandManualUtils.escapeHtml(data.value1) || 'Valor 1'}</h4>
-                <p>${BrandManualUtils.escapeHtml(data.valueDesc1) || '[Descrição de como este valor se manifesta no hotel]'}</p>
+                <h4>${escapeHtmlFixed(data.value1) || 'Valor 1'}</h4>
+                <p>${escapeHtmlFixed(data.valueDesc1) || '[Descrição de como este valor se manifesta no hotel]'}</p>
             </div>
             <div class="value-item">
-                <h4>${BrandManualUtils.escapeHtml(data.value2) || 'Valor 2'}</h4>
-                <p>${BrandManualUtils.escapeHtml(data.valueDesc2) || '[Descrição de como este valor se manifesta no hotel]'}</p>
+                <h4>${escapeHtmlFixed(data.value2) || 'Valor 2'}</h4>
+                <p>${escapeHtmlFixed(data.valueDesc2) || '[Descrição de como este valor se manifesta no hotel]'}</p>
             </div>
             <div class="value-item">
-                <h4>${BrandManualUtils.escapeHtml(data.value3) || 'Valor 3'}</h4>
-                <p>${BrandManualUtils.escapeHtml(data.valueDesc3) || '[Descrição de como este valor se manifesta no hotel]'}</p>
+                <h4>${escapeHtmlFixed(data.value3) || 'Valor 3'}</h4>
+                <p>${escapeHtmlFixed(data.valueDesc3) || '[Descrição de como este valor se manifesta no hotel]'}</p>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Logotipo
- */
-function generateLogoSection(data, logoSrc) {
-    return `
         <section class="section" id="logotipo">
             <h2>🎨 3. Logotipo</h2>
             
@@ -423,11 +490,11 @@ function generateLogoSection(data, logoSrc) {
             <div class="grid grid-2">
                 <div class="info-box">
                     <h3>Dimensão Mínima</h3>
-                    <p>${BrandManualUtils.escapeHtml(data.logoMinSize) || '[Ex: 50mm de largura]'}</p>
+                    <p>${escapeHtmlFixed(data.logoMinSize) || '[Ex: 50mm de largura]'}</p>
                 </div>
                 <div class="info-box">
                     <h3>Área de Proteção</h3>
-                    <p>${BrandManualUtils.escapeHtml(data.logoProtection) || '[Ex: 2x altura da letra principal]'}</p>
+                    <p>${escapeHtmlFixed(data.logoProtection) || '[Ex: 2x altura da letra principal]'}</p>
                 </div>
             </div>
 
@@ -437,226 +504,131 @@ function generateLogoSection(data, logoSrc) {
                     <li>✅ Sempre respeitar a dimensão mínima especificada</li>
                     <li>✅ Manter a área de proteção livre de outros elementos</li>
                     <li>✅ Usar sempre as versões oficiais do logotipo</li>
-                    <li>✅ Verificar contraste em diferentes fundos</li>
                     <li>❌ Nunca distorcer ou alterar as proporções</li>
                     <li>❌ Não alterar as cores sem autorização</li>
                     <li>❌ Não aplicar efeitos ou sombras não aprovados</li>
-                    <li>❌ Não utilizar o logo em baixa resolução</li>
                 </ul>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Paleta de Cores
- */
-function generateColorsSection(data) {
-    return `
         <section class="section" id="cores">
             <h2>🎨 4. Paleta de Cores</h2>
             
             <h3>Cores Principais</h3>
-            <div style="margin: 20px 0;">
-                <div class="color-swatch" style="background: ${data.primaryColor || '#2c3e50'};">
-                    Primária<br><small>${data.primaryColorHex || data.primaryColor || '#2c3e50'}</small>
+            <div class="color-swatches">
+                <div class="color-swatch" style="background: ${colors.primary};">
+                    <div>Primária</div>
+                    <small>${data.primaryColorHex || colors.primary}</small>
                 </div>
-                <div class="color-swatch" style="background: ${data.secondaryColor || '#3498db'};">
-                    Secundária<br><small>${data.secondaryColorHex || data.secondaryColor || '#3498db'}</small>
+                <div class="color-swatch" style="background: ${colors.secondary};">
+                    <div>Secundária</div>
+                    <small>${data.secondaryColorHex || colors.secondary}</small>
                 </div>
-                <div class="color-swatch" style="background: ${data.accentColor || '#e74c3c'};">
-                    Destaque<br><small>${data.accentColorHex || data.accentColor || '#e74c3c'}</small>
+                <div class="color-swatch" style="background: ${colors.accent};">
+                    <div>Destaque</div>
+                    <small>${data.accentColorHex || colors.accent}</small>
                 </div>
             </div>
 
             <div class="grid grid-3">
                 <div class="info-box">
-                    <h3>Cor Primária: ${BrandManualUtils.escapeHtml(data.primaryColorName) || '[Nome da Cor]'}</h3>
-                    <p><strong>HEX:</strong> ${data.primaryColorHex || data.primaryColor || '#2c3e50'}</p>
-                    <p><strong>RGB:</strong> ${hexToRgbString(data.primaryColor || '#2c3e50')}</p>
+                    <h3>Cor Primária: ${escapeHtmlFixed(data.primaryColorName) || '[Nome da Cor]'}</h3>
+                    <p><strong>HEX:</strong> ${data.primaryColorHex || colors.primary}</p>
                     <p><strong>Uso:</strong> Logotipo, títulos principais, elementos de destaque</p>
                 </div>
                 <div class="info-box">
-                    <h3>Cor Secundária: ${BrandManualUtils.escapeHtml(data.secondaryColorName) || '[Nome da Cor]'}</h3>
-                    <p><strong>HEX:</strong> ${data.secondaryColorHex || data.secondaryColor || '#3498db'}</p>
-                    <p><strong>RGB:</strong> ${hexToRgbString(data.secondaryColor || '#3498db')}</p>
+                    <h3>Cor Secundária: ${escapeHtmlFixed(data.secondaryColorName) || '[Nome da Cor]'}</h3>
+                    <p><strong>HEX:</strong> ${data.secondaryColorHex || colors.secondary}</p>
                     <p><strong>Uso:</strong> Subtítulos, links, botões secundários</p>
                 </div>
                 <div class="info-box">
-                    <h3>Cor de Destaque: ${BrandManualUtils.escapeHtml(data.accentColorName) || '[Nome da Cor]'}</h3>
-                    <p><strong>HEX:</strong> ${data.accentColorHex || data.accentColor || '#e74c3c'}</p>
-                    <p><strong>RGB:</strong> ${hexToRgbString(data.accentColor || '#e74c3c')}</p>
+                    <h3>Cor de Destaque: ${escapeHtmlFixed(data.accentColorName) || '[Nome da Cor]'}</h3>
+                    <p><strong>HEX:</strong> ${data.accentColorHex || colors.accent}</p>
                     <p><strong>Uso:</strong> Call-to-actions, alertas, destaques especiais</p>
                 </div>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Tipografia
- */
-function generateTypographySection(data) {
-    return `
         <section class="section" id="tipografia">
             <h2>✍️ 5. Tipografia</h2>
             
             <div class="grid grid-2">
                 <div class="info-box">
                     <h3>Fonte Principal</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.primaryFont) || '[Nome da Fonte]'}</strong></p>
-                    <p><strong>Uso:</strong> ${BrandManualUtils.escapeHtml(data.primaryFontUsage) || 'Títulos, logotipo, destaques'}</p>
+                    <p><strong>${escapeHtmlFixed(data.primaryFont) || '[Nome da Fonte]'}</strong></p>
+                    <p><strong>Uso:</strong> ${escapeHtmlFixed(data.primaryFontUsage) || 'Títulos, logotipo, destaques'}</p>
                 </div>
                 <div class="info-box">
                     <h3>Fonte Secundária</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.secondaryFont) || '[Nome da Fonte]'}</strong></p>
-                    <p><strong>Uso:</strong> ${BrandManualUtils.escapeHtml(data.secondaryFontUsage) || 'Textos longos, corpo'}</p>
-                </div>
-            </div>
-
-            <div class="info-box">
-                <h3>Hierarquia Tipográfica</h3>
-                <div style="margin: 20px 0;">
-                    <h1 style="margin-bottom: 10px; font-size: 2.5rem;">Título Principal (H1) - 32-48pt</h1>
-                    <h2 style="border: none; margin-bottom: 10px; font-size: 2rem;">Título Secundário (H2) - 24-32pt</h2>
-                    <h3 style="margin-bottom: 10px; font-size: 1.5rem;">Subtítulo (H3) - 18-24pt</h3>
-                    <p style="margin-bottom: 10px; font-size: 1rem;">Corpo do texto - 14-16pt. Este é um exemplo de texto corrido que deve ser legível e manter a consistência visual da marca em todos os materiais.</p>
-                    <small style="font-size: 0.9rem;">Texto pequeno/legendas - 12pt</small>
+                    <p><strong>${escapeHtmlFixed(data.secondaryFont) || '[Nome da Fonte]'}</strong></p>
+                    <p><strong>Uso:</strong> ${escapeHtmlFixed(data.secondaryFontUsage) || 'Textos longos, corpo'}</p>
                 </div>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Tom de Voz
- */
-function generateVoiceSection(data) {
-    return `
         <section class="section" id="tom-voz">
             <h2>🗣️ 6. Tom de Voz</h2>
             
             <div class="info-box">
                 <h3>Personalidade da Comunicação</h3>
-                <p>${BrandManualUtils.escapeHtml(data.voiceTone) || '[Como a marca deve se comunicar? Ex: Elegante, acolhedora, profissional...]'}</p>
+                <p>${escapeHtmlFixed(data.voiceTone) || '[Como a marca deve se comunicar? Ex: Elegante, acolhedora, profissional...]'}</p>
             </div>
 
             <div class="grid grid-2">
                 <div class="info-box">
                     <h3>Nível de Formalidade</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.formalityLevel) || '[A definir]'}</strong></p>
+                    <p><strong>${escapeHtmlFixed(data.formalityLevel) || '[A definir]'}</strong></p>
                 </div>
                 <div class="info-box">
                     <h3>Tratamento Preferido</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.treatment) || '[A definir]'}</strong></p>
+                    <p><strong>${escapeHtmlFixed(data.treatment) || '[A definir]'}</strong></p>
                 </div>
             </div>
-
-            ${data.keywordsUse || data.keywordsAvoid ? `
-                <div class="grid grid-2">
-                    <div class="info-box">
-                        <h3>✅ Palavras-chave (sempre usar)</h3>
-                        <p>${BrandManualUtils.escapeHtml(data.keywordsUse) || '[Liste palavras que representam a marca]'}</p>
-                    </div>
-                    <div class="info-box">
-                        <h3>❌ Palavras a evitar</h3>
-                        <p>${BrandManualUtils.escapeHtml(data.keywordsAvoid) || '[Liste palavras que não combinam com a marca]'}</p>
-                    </div>
-                </div>
-            ` : ''}
         </section>
-    `;
-}
 
-/**
- * Seção Aplicações
- */
-function generateApplicationsSection(data) {
-    return `
         <section class="section" id="aplicacoes">
             <h2>📋 7. Aplicações da Marca</h2>
             
             <div class="info-box">
                 <h3>Materiais Impressos</h3>
-                <p>${BrandManualUtils.escapeHtml(data.printMaterials) || '[Cartão de visita, papel timbrado, folhetos...]'}</p>
+                <p>${escapeHtmlFixed(data.printMaterials) || '[Cartão de visita, papel timbrado, folhetos...]'}</p>
             </div>
 
             <div class="info-box">
                 <h3>Sinalização</h3>
-                <p>${BrandManualUtils.escapeHtml(data.signage) || '[Placas externas, internas, direcionais...]'}</p>
+                <p>${escapeHtmlFixed(data.signage) || '[Placas externas, internas, direcionais...]'}</p>
             </div>
 
             <div class="info-box">
                 <h3>Uniformes</h3>
-                <p>${BrandManualUtils.escapeHtml(data.uniforms) || '[Especificações de uniformes e aplicação da marca]'}</p>
+                <p>${escapeHtmlFixed(data.uniforms) || '[Especificações de uniformes e aplicação da marca]'}</p>
             </div>
 
             <div class="info-box">
                 <h3>Materiais Digitais</h3>
-                <p>${BrandManualUtils.escapeHtml(data.digitalMaterials) || '[Website, redes sociais, e-mail marketing...]'}</p>
+                <p>${escapeHtmlFixed(data.digitalMaterials) || '[Website, redes sociais, e-mail marketing...]'}</p>
             </div>
         </section>
-    `;
-}
 
-/**
- * Seção Redes Sociais
- */
-function generateSocialSection(data) {
-    const socialItems = [];
-    
-    if (data.instagram) {
-        const instaHandle = data.instagram.replace('@', '');
-        socialItems.push(`<a href="https://instagram.com/${instaHandle}" class="social-item" target="_blank">📸 Instagram: ${BrandManualUtils.escapeHtml(data.instagram)}</a>`);
-    }
-    if (data.facebook) {
-        const fbUrl = data.facebook.includes('http') ? data.facebook : 'https://' + data.facebook;
-        socialItems.push(`<a href="${BrandManualUtils.escapeHtml(fbUrl)}" class="social-item" target="_blank">📘 Facebook</a>`);
-    }
-    if (data.linkedin) {
-        const liUrl = data.linkedin.includes('http') ? data.linkedin : 'https://' + data.linkedin;
-        socialItems.push(`<a href="${BrandManualUtils.escapeHtml(liUrl)}" class="social-item" target="_blank">💼 LinkedIn</a>`);
-    }
-    
-    return `
         <section class="section" id="redes-sociais">
             <h2>📱 8. Redes Sociais</h2>
             
-            ${socialItems.length > 0 ? `<div class="social-links">${socialItems.join('')}</div>` : '<p style="text-align: center; color: #6c757d; font-style: italic;">Nenhuma rede social configurada</p>'}
-
-            <div class="guidelines-box">
-                <h4>📋 Checklist para Posts</h4>
-                <ul>
-                    <li>✅ Logo aplicado corretamente</li>
-                    <li>✅ Cores da paleta utilizadas</li>
-                    <li>✅ Tom de voz consistente</li>
-                    <li>✅ Qualidade de imagem adequada</li>
-                    <li>✅ Hashtags relevantes incluídas</li>
-                    <li>✅ Call-to-action claro quando necessário</li>
-                </ul>
-            </div>
+            ${generateSocialSection(data)}
         </section>
-    `;
-}
 
-/**
- * Seção Contatos
- */
-function generateContactSection(data) {
-    return `
         <section class="section" id="contatos">
             <h2>📞 9. Contatos</h2>
             
             <div class="contact-grid">
                 <div class="contact-item">
                     <h3>👤 Responsável pela Marca</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.brandManager) || '[Nome do responsável]'}</strong></p>
-                    <p>📧 ${data.brandManagerEmail ? `<a href="mailto:${BrandManualUtils.escapeHtml(data.brandManagerEmail)}">${BrandManualUtils.escapeHtml(data.brandManagerEmail)}</a>` : '[email@hotel.com]'}</p>
-                    <p>📱 ${BrandManualUtils.escapeHtml(data.brandManagerPhone) || '[+55 (11) 99999-9999]'}</p>
+                    <p><strong>${escapeHtmlFixed(data.brandManager) || '[Nome do responsável]'}</strong></p>
+                    <p>📧 ${data.brandManagerEmail ? `<a href="mailto:${escapeHtmlFixed(data.brandManagerEmail)}">${escapeHtmlFixed(data.brandManagerEmail)}</a>` : '[email@hotel.com]'}</p>
+                    <p>📱 ${escapeHtmlFixed(data.brandManagerPhone) || '[+55 (11) 99999-9999]'}</p>
                 </div>
                 <div class="contact-item">
                     <h3>🎨 Agência/Designer</h3>
-                    <p><strong>${BrandManualUtils.escapeHtml(data.designer) || '[Nome da agência ou designer]'}</strong></p>
+                    <p><strong>${escapeHtmlFixed(data.designer) || '[Nome da agência ou designer]'}</strong></p>
                 </div>
             </div>
         </section>
@@ -664,26 +636,31 @@ function generateContactSection(data) {
 }
 
 /**
- * Gerar footer
+ * Gerar seção de redes sociais
  */
-function generateExportFooter(data) {
-    return `
-        <div class="footer">
-            <h3>📝 Informações do Manual</h3>
-            <p><strong>Versão:</strong> 1.0</p>
-            <p><strong>Data de Criação:</strong> ${BrandManualUtils.formatDate()}</p>
-            <p><strong>Próxima Revisão:</strong> ${BrandManualUtils.formatDate(new Date(Date.now() + 365*24*60*60*1000))}</p>
-            <p style="margin-top: 20px; font-style: italic;">
-                Este manual é um documento vivo e deve ser atualizado sempre que houver mudanças na identidade visual da marca.
-            </p>
-        </div>
-    `;
+function generateSocialSection(data) {
+    const socialItems = [];
+    
+    if (data.instagram) {
+        const instaHandle = data.instagram.replace('@', '');
+        socialItems.push(`<a href="https://instagram.com/${instaHandle}" class="social-item" target="_blank">📸 Instagram: ${escapeHtmlFixed(data.instagram)}</a>`);
+    }
+    if (data.facebook) {
+        socialItems.push(`<a href="#" class="social-item">📘 Facebook</a>`);
+    }
+    if (data.linkedin) {
+        socialItems.push(`<a href="#" class="social-item">💼 LinkedIn</a>`);
+    }
+    
+    return socialItems.length > 0 
+        ? `<div class="social-links">${socialItems.join('')}</div>`
+        : '<p style="text-align: center; color: #6c757d; font-style: italic;">Nenhuma rede social configurada</p>';
 }
 
 /**
- * Script para exportação
+ * JavaScript para o HTML exportado
  */
-function getExportScript(data) {
+function getFixedJavaScript() {
     return `
         // Scroll suave para âncoras
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -696,127 +673,59 @@ function getExportScript(data) {
             });
         });
 
-        // Função para imprimir
-        function printManual() {
-            window.print();
-        }
+        // Esconder botão de print ao imprimir
+        window.addEventListener('beforeprint', function() {
+            document.querySelector('.print-btn').style.display = 'none';
+        });
 
-        // Adicionar botão de impressão
-        const printBtn = document.createElement('button');
-        printBtn.innerHTML = '🖨️ Imprimir Manual';
-        printBtn.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 1000; padding: 12px 20px; background: #27ae60; color: white; border: none; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-weight: bold;';
-        printBtn.onclick = printManual;
-        document.body.appendChild(printBtn);
+        window.addEventListener('afterprint', function() {
+            document.querySelector('.print-btn').style.display = 'block';
+        });
+
+        console.log('Manual da Marca carregado com sucesso!');
     `;
 }
 
 /**
- * Gerar HTML para PDF/Impressão
+ * Download do arquivo HTML
  */
-function generatePDFHTML(data) {
-    return `<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Manual da Marca - ${BrandManualUtils.escapeHtml(data.hotelName || 'Hotel')}</title>
-    <style>
-        body { font-family: Arial; margin: 20px; font-size: 12pt; line-height: 1.4; }
-        .header { text-align: center; margin-bottom: 30px; padding: 30px; background: #f8f9fa; border-radius: 10px; }
-        h1 { font-size: 24pt; color: #2c3e50; margin-bottom: 10pt; }
-        h2 { font-size: 18pt; color: #2c3e50; margin: 20pt 0 10pt 0; border-bottom: 2pt solid #3498db; padding-bottom: 5pt; }
-        h3 { font-size: 14pt; color: #2c3e50; margin: 15pt 0 8pt 0; }
-        .info-box { border: 1pt solid #ddd; padding: 15pt; margin: 10pt 0; background: #f9f9f9; border-radius: 5pt; }
-        .page-break { page-break-before: always; }
-        @media print { 
-            .no-print { display: none !important; }
-            body { margin: 0; }
-        }
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>📋 MANUAL DA MARCA</h1>
-        <h2 style="border: none; margin: 0;">${BrandManualUtils.escapeHtml(data.hotelName || '[NOME DO HOTEL]')}</h2>
-    </div>
-    
-    <div class="page-break">
-        <h2>🏢 Informações Básicas</h2>
-        <div class="info-box">
-            <p><strong>Nome:</strong> ${BrandManualUtils.escapeHtml(data.hotelName) || '[A PREENCHER]'}</p>
-            <p><strong>Tipo:</strong> ${BrandManualUtils.escapeHtml(data.hotelType) || '[A PREENCHER]'}</p>
-            <p><strong>Localização:</strong> ${BrandManualUtils.escapeHtml(data.hotelLocation) || '[A PREENCHER]'}</p>
-            <p><strong>Website:</strong> ${BrandManualUtils.escapeHtml(data.hotelWebsite) || '[A PREENCHER]'}</p>
-        </div>
-    </div>
-    
-    <div class="page-break">
-        <h2>🎯 Identidade da Marca</h2>
-        <div class="info-box">
-            <h3>Missão</h3>
-            <p>${BrandManualUtils.escapeHtml(data.mission) || '[A PREENCHER]'}</p>
-        </div>
-        <div class="info-box">
-            <h3>Visão</h3>
-            <p>${BrandManualUtils.escapeHtml(data.vision) || '[A PREENCHER]'}</p>
-        </div>
-        <div class="info-box">
-            <h3>Posicionamento</h3>
-            <p>${BrandManualUtils.escapeHtml(data.positioning) || '[A PREENCHER]'}</p>
-        </div>
-    </div>
-    
-    <div class="page-break">
-        <h2>🎨 Paleta de Cores</h2>
-        <div class="info-box">
-            <p><strong>Cor Primária:</strong> ${BrandManualUtils.escapeHtml(data.primaryColorName) || '[Nome]'} - ${data.primaryColorHex || data.primaryColor || '#2c3e50'}</p>
-            <p><strong>Cor Secundária:</strong> ${BrandManualUtils.escapeHtml(data.secondaryColorName) || '[Nome]'} - ${data.secondaryColorHex || data.secondaryColor || '#3498db'}</p>
-            <p><strong>Cor de Destaque:</strong> ${BrandManualUtils.escapeHtml(data.accentColorName) || '[Nome]'} - ${data.accentColorHex || data.accentColor || '#e74c3c'}</p>
-        </div>
-    </div>
-    
-    <div class="page-break">
-        <h2>📞 Contatos</h2>
-        <div class="info-box">
-            <p><strong>Responsável:</strong> ${BrandManualUtils.escapeHtml(data.brandManager) || '[Nome]'}</p>
-            <p><strong>Email:</strong> ${BrandManualUtils.escapeHtml(data.brandManagerEmail) || '[Email]'}</p>
-            <p><strong>Telefone:</strong> ${BrandManualUtils.escapeHtml(data.brandManagerPhone) || '[Telefone]'}</p>
-        </div>
-    </div>
-    
-    <script>
-        window.onload = function() { 
-            window.print(); 
-            setTimeout(() => window.close(), 1000);
-        };
-    </script>
-</body>
-</html>`;
+function downloadHTMLFile(content, filename) {
+    try {
+        const blob = new Blob([content], { type: 'text/html;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        // Limpar URL após download
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
+        
+        BrandManualUtils.devLog('Download realizado', filename);
+    } catch (error) {
+        throw new Error('Falha no download: ' + error.message);
+    }
 }
 
 /**
- * Converter HEX para string RGB
+ * Escape HTML seguro
  */
-function hexToRgbString(hex) {
-    const rgb = BrandManualUtils.hexToRgb(hex);
-    return rgb ? `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})` : 'N/A';
+function escapeHtmlFixed(text) {
+    if (!text) return '';
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    };
+    return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
-// Exportar funções para uso global
-window.BrandManualExport = {
-    exportHTML,
-    exportPDF,
-    generateCompleteHTML,
-    generatePDFHTML,
-    
-    // Generators
-    generateExportContent,
-    generateBasicInfoSection,
-    generateIdentitySection,
-    generateLogoSection,
-    generateColorsSection,
-    generateTypographySection,
-    generateVoiceSection,
-    generateApplicationsSection,
-    generateSocialSection,
-    generateContactSection
-};
+// Substituir função global
+window.exportHTML = exportHTML;
