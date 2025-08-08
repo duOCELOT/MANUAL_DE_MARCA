@@ -72,6 +72,13 @@ function generateCompleteHTML(data, logoSrc) {
         secondary: data.secondaryColor || '#3498db',
         accent: data.accentColor || '#e74c3c'
     };
+
+    const customizations = data._customizations;
+    let coverPageHTML = '';
+    if (customizations && customizations.coverPage.enabled) {
+        // Adicionar capa no início do HTML
+        coverPageHTML = generateCoverPage(data, logoSrc, customizations);
+    }
     
     return `<!DOCTYPE html>
 <html lang="pt-BR">
@@ -123,6 +130,7 @@ function generateCompleteHTML(data, logoSrc) {
     <script>
         ${getExportJavaScript()}
     </script>
+    
 </body>
 </html>`;
 }
