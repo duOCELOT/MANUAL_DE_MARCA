@@ -6,40 +6,30 @@
     <title>Manual da Marca - Template Interativo</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/customization.css">
-    <link rel="stylesheet" href="css/templates.css">
+
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🏨 Manual da Marca Interativo</h1>
-            <p>Crie e personalize o manual da marca do seu hotel com templates profissionais</p>
+            <p>Crie e personalize o manual da marca do seu hotel</p>
         </div>
 
         <div class="controls">
-            <!-- Theme toggle will be inserted here by theme.js -->
             <button class="btn btn-success" onclick="saveData()">
                 💾 Salvar Dados
             </button>
             <button class="btn btn-warning" onclick="loadData()">
                 📂 Carregar Dados
             </button>
-            <button class="btn btn-primary" onclick="previewSelectedTemplate()">
-                👁️ Preview Template
+            <button class="btn btn-primary" onclick="previewManual()">
+                👁️ Preview
             </button>
-            <button class="btn btn-primary" onclick="previewResponsive()">
-                📱 Preview Mobile
-            </button>
-            <button class="btn btn-primary" onclick="exportHTMLWithTemplate()">
+            <button class="btn btn-primary" onclick="exportHTML()">
                 📄 Exportar HTML
             </button>
-            <button class="btn btn-primary" onclick="exportPDFWithTemplate()">
+            <button class="btn btn-primary" onclick="exportPDF()">
                 📋 Exportar PDF
-            </button>
-            <button class="btn btn-secondary" onclick="exportAllFormats()">
-                📦 Exportar Tudo
-            </button>
-            <button class="btn btn-info" onclick="generateShareLink()">
-                🔗 Compartilhar
             </button>
             <button class="btn btn-warning" onclick="clearAllData()">
                 🗑️ Limpar Tudo
@@ -54,8 +44,6 @@
         <div class="success-message" id="successMessage">
             ✅ Operação realizada com sucesso!
         </div>
-
-        <!-- Template Selector Section will be inserted here by templates.js -->
 
         <!-- Seção 1: Informações Básicas -->
         <section class="section">
@@ -322,100 +310,12 @@
         </section>
     </div>
 
-    <!-- Scripts - Load in correct order -->
+    <!-- Scripts -->
     <script src="js/utils.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/preview.js"></script>
     <script src="js/export.js"></script>
     <script src="js/customization.js"></script>
-    
-    <!-- New Template and Theme Scripts -->
-    <script src="js/templates.js"></script>
-    <script src="js/theme.js"></script>
-    <script src="js/export-templates.js"></script>
-    
-    <!-- Main app script last -->
     <script src="js/app.js"></script>
-
-    <script>
-        // System initialization and debugging
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Initializing Brand Manual Generator...');
-            
-            // Check if all required systems are loaded
-            const systems = {
-                'Utils': window.BrandManualUtils,
-                'Storage': window.BrandManualStorage,
-                'Theme': window.BrandManualTheme,
-                'Templates': window.BrandManualTemplates,
-                'Export': window.BrandManualExportTemplates
-            };
-            
-            console.log('=== SYSTEM CHECK ===');
-            Object.entries(systems).forEach(([name, system]) => {
-                console.log(`${name}:`, system ? '✅ Loaded' : '❌ Missing');
-            });
-            
-            // Initialize theme system first
-            if (window.BrandManualTheme) {
-                try {
-                    BrandManualTheme.initializeThemeSystem();
-                    console.log('✅ Theme system initialized');
-                } catch (error) {
-                    console.error('❌ Theme system error:', error);
-                }
-            }
-            
-            // Initialize template system
-            if (window.BrandManualTemplates) {
-                try {
-                    BrandManualTemplates.initializeTemplateSystem();
-                    console.log('✅ Template system initialized');
-                } catch (error) {
-                    console.error('❌ Template system error:', error);
-                }
-            }
-            
-            // Load any shared data
-            if (window.BrandManualExportTemplates) {
-                try {
-                    BrandManualExportTemplates.loadFromShareLink();
-                    console.log('✅ Export templates initialized');
-                } catch (error) {
-                    console.error('❌ Export templates error:', error);
-                }
-            }
-            
-            // Final initialization check
-            setTimeout(() => {
-                const themeToggle = document.getElementById('theme-toggle');
-                const templateSelector = document.getElementById('template-selector-section');
-                
-                console.log('=== FEATURE CHECK ===');
-                console.log('Theme Toggle:', themeToggle ? '✅ Present' : '❌ Missing');
-                console.log('Template Selector:', templateSelector ? '✅ Present' : '❌ Missing');
-                
-                if (themeToggle && templateSelector) {
-                    console.log('🎉 All systems operational!');
-                } else {
-                    console.warn('⚠️ Some features may not be working properly');
-                }
-            }, 1000);
-            
-            console.log('🏨 Manual da Marca com Templates e Tema Escuro carregado!');
-        });
-        
-        // Global error handler
-        window.addEventListener('error', function(e) {
-            console.error('Global error:', e.error);
-            console.error('File:', e.filename);
-            console.error('Line:', e.lineno);
-        });
-        
-        // Unhandled promise rejection handler
-        window.addEventListener('unhandledrejection', function(e) {
-            console.error('Unhandled promise rejection:', e.reason);
-        });
-    </script>
 </body>
 </html>

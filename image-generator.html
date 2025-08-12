@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Template Preview Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .generator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        .template-generator {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .template-generator h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        .preview-canvas {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            margin: 20px 0;
+            background: white;
+        }
+        .controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 15px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .btn-primary { background: #3498db; color: white; }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-warning { background: #f39c12; color: white; }
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
+        .template-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎨 Template Preview Image Generator</h1>
+        <p>Generate high-quality preview images for your brand manual templates</p>
+    </div>
+
+    <div class="generator-grid">
+        <!-- Classic Template -->
+        <div class="template-generator">
+            <h3>Classic Template (16:9)</h3>
+            <canvas id="classic-canvas" class="preview-canvas" width="320" height="180"></canvas>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="drawClassic()">Generate</button>
+                <button class="btn btn-success" onclick="downloadCanvas('classic-canvas', 'classic-preview.png')">Download</button>
+            </div>
+            <div class="template-info">Traditional, clean and professional layout</div>
+        </div>
+
+        <!-- Constitution Template -->
+        <div class="template-generator">
+            <h3>Constitution Template (4:3)</h3>
+            <canvas id="constitution-canvas" class="preview-canvas" width="240" height="180"></canvas>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="drawConstitution()">Generate</button>
+                <button class="btn btn-success" onclick="downloadCanvas('constitution-canvas', 'constitution-preview.png')">Download</button>
+            </div>
+            <div class="template-info">Inspired by official documents, elegant and formal</div>
+        </div>
+
+        <!-- Modern Template -->
+        <div class="template-generator">
+            <h3>Modern Template (16:9)</h3>
+            <canvas id="modern-canvas" class="preview-canvas" width="320" height="180"></canvas>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="drawModern()">Generate</button>
+                <button class="btn btn-success" onclick="downloadCanvas('modern-canvas', 'modern-preview.png')">Download</button>
+            </div>
+            <div class="template-info">Contemporary design with dynamic visual elements</div>
+        </div>
+
+        <!-- Minimalist Template -->
+        <div class="template-generator">
+            <h3>Minimalist Template (4:3)</h3>
+            <canvas id="minimalist-canvas" class="preview-canvas" width="240" height="180"></canvas>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="drawMinimalist()">Generate</button>
+                <button class="btn btn-success" onclick="downloadCanvas('minimalist-canvas', 'minimalist-preview.png')">Download</button>
+            </div>
+            <div class="template-info">Focus on content, without visual distractions</div>
+        </div>
+
+        <!-- Luxury Template -->
+        <div class="template-generator">
+            <h3>Luxury Template (16:9)</h3>
+            <canvas id="luxury-canvas" class="preview-canvas" width="320" height="180"></canvas>
+            <div class="controls">
+                <button class="btn btn-primary" onclick="drawLuxury()">Generate</button>
+                <button class="btn btn-success" onclick="downloadCanvas('luxury-canvas', 'luxury-preview.png')">Download</button>
+            </div>
+            <div class="template-info">Elegant and sophisticated for premium hotels</div>
+        </div>
+
+        <!-- Batch Generator -->
+        <div class="template-generator">
+            <h3>🚀 Batch Generator</h3>
+            <div style="padding: 40px;">
+                <p>Generate all template previews at once</p>
+                <div class="controls">
+                    <button class="btn btn-warning" onclick="generateAll()">Generate All</button>
+                    <button class="btn btn-success" onclick="downloadAll()">Download All</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Draw functions for each template
+        function drawClassic() {
+            const canvas = document.getElementById('classic-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Header gradient
+            const gradient = ctx.createLinearGradient(0, 0, 320, 72);
+            gradient.addColorStop(0, '#2c3e50');
+            gradient.addColorStop(1, '#3498db');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 320, 72);
+
+            // Header text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('MANUAL DA MARCA', 160, 35);
+            ctx.font = '12px Arial';
+            ctx.fillText('Hotel Paradise', 160, 55);
+
+            // Content area
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 72, 320, 108);
+
+            // Section header
+            ctx.fillStyle = '#3498db';
+            ctx.fillRect(20, 85, 280, 2);
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = 'bold 10px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('IDENTIDADE DA MARCA', 25, 105);
+
+            // Content blocks
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(25, 115, 120, 8);
+            ctx.fillRect(175, 115, 120, 8);
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillRect(25, 130, 270, 4);
+            ctx.fillRect(25, 140, 200, 4);
+            ctx.fillRect(25, 150, 240, 4);
+
+            // Aspect ratio indicator
+            ctx.fillStyle = 'rgba(52,152,219,0.1)';
+            ctx.fillRect(250, 155, 30, 12);
+            ctx.strokeStyle = '#3498db';
+            ctx.strokeRect(250, 155, 30, 12);
+            ctx.fillStyle = '#3498db';
+            ctx.font = '6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('16:9', 265, 163);
+        }
+
+        function drawConstitution() {
+            const canvas = document.getElementById('constitution-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background
+            ctx.fillStyle = '#f8f8f8';
+            ctx.fillRect(0, 0, 240, 180);
+
+            // Header gradient
+            const gradient = ctx.createLinearGradient(0, 0, 240, 80);
+            gradient.addColorStop(0, '#1a1a1a');
+            gradient.addColorStop(1, '#333333');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 240, 80);
+
+            // Orange accent
+            ctx.fillStyle = '#ff6b35';
+            ctx.fillRect(80, 30, 80, 4);
+
+            // Header text
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('CONSTITUTION', 120, 20);
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = '10px Arial';
+            ctx.fillText('HOTEL PARADISE', 120, 50);
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            ctx.font = '6px Arial';
+            ctx.fillText('VERSION 01 • 2024', 120, 65);
+
+            // Content Area
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 80, 240, 100);
+
+            // Article Section
+            ctx.fillStyle = '#ff6b35';
+            ctx.fillRect(20, 95, 200, 1.5);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '8px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('ARTICLE I - BRAND IDENTITY', 25, 110);
+
+            // Content blocks
+            ctx.fillStyle = 'rgba(255,107,53,0.05)';
+            ctx.fillRect(25, 120, 80, 6);
+            ctx.fillRect(135, 120, 80, 6);
+            ctx.strokeStyle = 'rgba(255,107,53,0.2)';
+            ctx.strokeRect(25, 120, 80, 6);
+            ctx.strokeRect(135, 120, 80, 6);
+
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(25, 135, 190, 3);
+            ctx.fillRect(25, 145, 160, 3);
+            ctx.fillRect(25, 155, 180, 3);
+
+            // Aspect ratio indicator
+            ctx.fillStyle = 'rgba(255,107,53,0.1)';
+            ctx.fillRect(180, 160, 25, 12);
+            ctx.strokeStyle = '#ff6b35';
+            ctx.strokeRect(180, 160, 25, 12);
+            ctx.fillStyle = '#ff6b35';
+            ctx.font = '6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('4:3', 192.5, 168);
+        }
+
+        function drawModern() {
+            const canvas = document.getElementById('modern-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background gradient
+            const bgGradient = ctx.createLinearGradient(0, 0, 320, 180);
+            bgGradient.addColorStop(0, '#667eea');
+            bgGradient.addColorStop(1, '#764ba2');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, 320, 180);
+
+            // Floating elements
+            ctx.fillStyle = 'rgba(255,255,255,0.1)';
+            ctx.beginPath();
+            ctx.arc(50, 40, 15, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(270, 140, 20, 0, 2 * Math.PI);
+            ctx.fill();
+
+            // Header card
+            ctx.fillStyle = 'rgba(255,255,255,0.95)';
+            ctx.roundRect(40, 30, 240, 50, 12);
+            ctx.fill();
+
+            ctx.fillStyle = '#667eea';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('BRAND MANUAL', 160, 50);
+            ctx.fillStyle = '#2c3e50';
+            ctx.font = '10px Arial';
+            ctx.fillText('Hotel Paradise', 160, 65);
+
+            // Content Cards
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.roundRect(40, 90, 100, 60, 8);
+            ctx.fill();
+            ctx.roundRect(180, 90, 100, 60, 8);
+            ctx.fill();
+
+            // Card Content
+            ctx.fillStyle = '#667eea';
+            ctx.fillRect(45, 100, 60, 2);
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillRect(45, 110, 80, 3);
+            ctx.fillRect(45, 120, 70, 3);
+            ctx.fillRect(45, 130, 85, 3);
+
+            ctx.fillStyle = '#764ba2';
+            ctx.fillRect(185, 100, 60, 2);
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillRect(185, 110, 80, 3);
+            ctx.fillRect(185, 120, 70, 3);
+            ctx.fillRect(185, 130, 85, 3);
+
+            // Aspect ratio indicator
+            ctx.fillStyle = 'rgba(255,255,255,0.9)';
+            ctx.roundRect(250, 155, 30, 12, 2);
+            ctx.fill();
+            ctx.strokeStyle = '#667eea';
+            ctx.roundRect(250, 155, 30, 12, 2);
+            ctx.stroke();
+            ctx.fillStyle = '#667eea';
+            ctx.font = '6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('16:9', 265, 163);
+        }
+
+        function drawMinimalist() {
+            const canvas = document.getElementById('minimalist-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 240, 180);
+
+            // Header
+            ctx.fillStyle = '#e0e0e0';
+            ctx.fillRect(0, 59, 240, 1);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = 'bold 16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('BRAND MANUAL', 120, 30);
+            ctx.fillStyle = '#666';
+            ctx.font = '8px Arial';
+            ctx.fillText('HOTEL PARADISE', 120, 45);
+
+            // Content Section
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '8px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('IDENTITY', 25, 85);
+            ctx.fillRect(25, 88, 40, 0.5);
+
+            // Content blocks
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(25, 100, 190, 1);
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(25, 110, 160, 3);
+            ctx.fillRect(25, 120, 180, 3);
+            ctx.fillRect(25, 130, 140, 3);
+
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(25, 145, 190, 1);
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(25, 155, 120, 3);
+            ctx.fillRect(25, 165, 150, 3);
+
+            // Aspect ratio indicator
+            ctx.fillStyle = '#fafafa';
+            ctx.fillRect(180, 160, 25, 12);
+            ctx.strokeStyle = '#000';
+            ctx.lineWidth = 0.3;
+            ctx.strokeRect(180, 160, 25, 12);
+            ctx.fillStyle = '#000';
+            ctx.font = '6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('4:3', 192.5, 168);
+        }
+
+        function drawLuxury() {
+            const canvas = document.getElementById('luxury-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Background gradient
+            const bgGradient = ctx.createLinearGradient(0, 0, 320, 180);
+            bgGradient.addColorStop(0, '#000428');
+            bgGradient.addColorStop(1, '#004e92');
+            ctx.fillStyle = bgGradient;
+            ctx.fillRect(0, 0, 320, 180);
+
+            // Header card
+            ctx.fillStyle = 'rgba(255,255,255,0.98)';
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(40, 20, 240, 60);
+            ctx.fillRect(40, 20, 240, 60);
+
+            // Inner border
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(45, 25, 230, 50);
+
+            ctx.fillStyle = '#d4af37';
+            ctx.font = 'bold 14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('BRAND MANUAL', 160, 45);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.font = '10px Arial';
+            ctx.fillText('Hotel Paradise', 160, 60);
+
+            // Content Section
+            ctx.fillStyle = 'rgba(255,255,255,0.98)';
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(40, 100, 240, 60);
+            ctx.fillRect(40, 100, 240, 60);
+
+            // Inner border
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(45, 105, 230, 50);
+
+            // Content blocks
+            ctx.fillStyle = 'rgba(212,175,55,0.1)';
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(50, 115, 80, 8);
+            ctx.fillRect(50, 115, 80, 8);
+            ctx.strokeRect(150, 115, 80, 8);
+            ctx.fillRect(150, 115, 80, 8);
+
+            ctx.fillStyle = '#f5f5f5';
+            ctx.fillRect(50, 130, 210, 3);
+            ctx.fillRect(50, 140, 180, 3);
+            ctx.fillRect(50, 150, 200, 3);
+
+            // Decorative corners
+            ctx.fillStyle = '#d4af37';
+            ctx.fillRect(45, 25, 10, 2);
+            ctx.fillRect(265, 25, 10, 2);
+            ctx.fillRect(45, 73, 10, 2);
+            ctx.fillRect(265, 73, 10, 2);
+
+            // Aspect ratio indicator
+            ctx.fillStyle = 'rgba(212,175,55,0.2)';
+            ctx.strokeStyle = '#d4af37';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(250, 160, 30, 12);
+            ctx.fillRect(250, 160, 30, 12);
+            ctx.fillStyle = '#d4af37';
+            ctx.font = '6px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('16:9', 265, 168);
+        }
+
+        // Utility functions
+        function downloadCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+
+        function generateAll() {
+            drawClassic();
+            drawConstitution();
+            drawModern();
+            drawMinimalist();
+            drawLuxury();
+            alert('All templates generated! You can now download them individually.');
+        }
+
+        function downloadAll() {
+            setTimeout(() => downloadCanvas('classic-canvas', 'classic-preview.png'), 100);
+            setTimeout(() => downloadCanvas('constitution-canvas', 'constitution-preview.png'), 200);
+            setTimeout(() => downloadCanvas('modern-canvas', 'modern-preview.png'), 300);
+            setTimeout(() => downloadCanvas('minimalist-canvas', 'minimalist-preview.png'), 400);
+            setTimeout(() => downloadCanvas('luxury-canvas', 'luxury-preview.png'), 500);
+            alert('All template previews downloaded!');
+        }
+
+        // Add roundRect function for older browsers
+        if (!CanvasRenderingContext2D.prototype.roundRect) {
+            CanvasRenderingContext2D.prototype.roundRect = function(x, y, width, height, radius) {
+                this.beginPath();
+                this.moveTo(x + radius, y);
+                this.lineTo(x + width - radius, y);
+                this.quadraticCurveTo(x + width, y, x + width, y + radius);
+                this.lineTo(x + width, y + height - radius);
+                this.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+                this.lineTo(x + radius, y + height);
+                this.quadraticCurveTo(x, y + height, x, y + height - radius);
+                this.lineTo(x, y + radius);
+                this.quadraticCurveTo(x, y, x + radius, y);
+                this.closePath();
+            };
+        }
+
+        // Auto-generate on page load
+        window.addEventListener('load', function() {
+            setTimeout(generateAll, 500);
+        });
+    </script>
+</body>
+</html>

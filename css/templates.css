@@ -1,0 +1,490 @@
+/* Template Selector Styles */
+.template-selector {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: 3px solid #4a90e2;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-selector::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    animation: templateGlow 4s ease-in-out infinite;
+}
+
+.template-selector h2 {
+    color: white;
+    border-bottom-color: rgba(255,255,255,0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.template-selector p {
+    position: relative;
+    z-index: 1;
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+/* Template Grid */
+.template-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 30px 0;
+    position: relative;
+    z-index: 1;
+}
+
+/* Template Cards */
+.template-card {
+    background: rgba(255,255,255,0.95);
+    border-radius: 15px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    border: 3px solid transparent;
+    color: #2c3e50;
+    position: relative;
+    overflow: hidden;
+}
+
+.template-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    border-color: rgba(255,255,255,0.5);
+}
+
+.template-card.selected {
+    border-color: #27ae60;
+    background: rgba(255,255,255,1);
+    box-shadow: 0 20px 40px rgba(39, 174, 96, 0.3);
+}
+
+.template-card.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #27ae60;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* Template Preview Mockup */
+.template-preview {
+    margin-bottom: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+    height: 150px;
+    position: relative;
+}
+
+.template-mockup {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #e0e0e0;
+}
+
+.mockup-header {
+    height: 40%;
+    position: relative;
+}
+
+.mockup-content {
+    flex: 1;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #fafafa;
+}
+
+.mockup-title {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #666;
+}
+
+.mockup-subtitle {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.mockup-aspect {
+    font-size: 10px;
+    color: #999;
+    background: rgba(0,0,0,0.1);
+    padding: 2px 6px;
+    border-radius: 10px;
+}
+
+/* Template Specific Mockups */
+.template-classic .mockup-header {
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+}
+
+.template-classic .mockup-subtitle {
+    color: #2c3e50;
+}
+
+.template-constitution .mockup-header {
+    background: linear-gradient(135deg, #1a1a1a, #333333);
+    position: relative;
+}
+
+.template-constitution .mockup-header::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 20px;
+    background: #ff6b35;
+    opacity: 0.8;
+}
+
+.template-constitution .mockup-subtitle {
+    color: #1a1a1a;
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+.template-modern .mockup-header {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+.template-modern .mockup-content {
+    background: linear-gradient(45deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+}
+
+.template-modern .mockup-subtitle {
+    color: #667eea;
+    font-weight: 100;
+}
+
+.template-minimalist .mockup-header {
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.template-minimalist .mockup-content {
+    background: white;
+}
+
+.template-minimalist .mockup-subtitle {
+    color: #1a1a1a;
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-size: 12px;
+}
+
+.template-luxury .mockup-header {
+    background: linear-gradient(135deg, #000428, #004e92);
+    position: relative;
+}
+
+.template-luxury .mockup-header::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid #d4af37;
+}
+
+.template-luxury .mockup-subtitle {
+    color: #d4af37;
+    font-weight: 300;
+}
+
+.template-luxury .mockup-content {
+    background: rgba(212, 175, 55, 0.1);
+}
+
+/* Template Info */
+.template-info {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.template-info h3 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+
+.template-info p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.template-aspect {
+    display: inline-block;
+    background: rgba(52, 152, 219, 0.1);
+    color: #3498db;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Template Actions */
+.template-actions {
+    text-align: center;
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.template-actions .btn {
+    background: rgba(255,255,255,0.9);
+    color: #4a90e2;
+    border: 2px solid rgba(255,255,255,0.3);
+    font-weight: 600;
+    padding: 12px 30px;
+    font-size: 1rem;
+}
+
+.template-actions .btn:hover {
+    background: white;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+/* Template Button States */
+.btn-template {
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.template-card.selected .btn-template {
+    background: #27ae60 !important;
+    color: white !important;
+    border-color: #27ae60 !important;
+}
+
+.template-card.selected .btn-template:hover {
+    background: #219a52 !important;
+}
+
+/* Animation */
+@keyframes templateGlow {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+.template-card {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .template-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .template-card {
+        padding: 15px;
+    }
+    
+    .template-preview {
+        height: 120px;
+    }
+    
+    .mockup-content {
+        padding: 10px;
+    }
+    
+    .mockup-title {
+        font-size: 10px;
+    }
+    
+    .mockup-subtitle {
+        font-size: 12px;
+    }
+    
+    .template-actions .btn {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .template-selector {
+        padding: 20px;
+    }
+    
+    .template-preview {
+        height: 100px;
+    }
+    
+    .template-card {
+        padding: 12px;
+    }
+}
+
+/* Dark Theme Adjustments for Templates */
+[data-theme="dark"] .template-card {
+    background: rgba(45, 45, 45, 0.95);
+    color: #e0e0e0;
+    border-color: rgba(255,255,255,0.1);
+}
+
+[data-theme="dark"] .template-card:hover {
+    border-color: rgba(255,255,255,0.3);
+}
+
+[data-theme="dark"] .template-card.selected {
+    background: rgba(45, 45, 45, 1);
+    border-color: #4ecdc4;
+    box-shadow: 0 20px 40px rgba(78, 205, 196, 0.3);
+}
+
+[data-theme="dark"] .template-card.selected::before {
+    background: #4ecdc4;
+}
+
+[data-theme="dark"] .template-info h3 {
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .template-info p {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .template-aspect {
+    background: rgba(93, 166, 240, 0.2);
+    color: #5da6f0;
+}
+
+[data-theme="dark"] .mockup-content {
+    background: #3a3a3a;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .mockup-title {
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .mockup-aspect {
+    background: rgba(255,255,255,0.1);
+    color: #b0b0b0;
+}
+
+[data-theme="dark"] .template-actions .btn {
+    background: rgba(45, 45, 45, 0.9);
+    color: #5da6f0;
+    border-color: rgba(255,255,255,0.2);
+}
+
+[data-theme="dark"] .template-actions .btn:hover {
+    background: #3a3a3a;
+    border-color: #5da6f0;
+}
+
+/* Loading State for Templates */
+.template-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.template-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(74, 144, 226, 0.3);
+    border-top: 3px solid #4a90e2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Custom scrollbar for template area */
+.template-selector {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) transparent;
+}
+
+.template-selector::-webkit-scrollbar {
+    width: 8px;
+}
+
+.template-selector::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.template-selector::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+}
+
+.template-selector::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+
+/* Accessibility improvements */
+.template-card:focus-within {
+    outline: 2px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.btn-template:focus {
+    outline: 2px solid rgba(74, 144, 226, 0.8);
+    outline-offset: 2px;
+}
+
+/* Print styles - hide templates when printing */
+@media print {
+    .template-selector {
+        display: none !important;
+    }
+}
