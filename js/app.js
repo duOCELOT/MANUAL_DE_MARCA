@@ -29,11 +29,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar preview das cores
     updateColorPreview();
     
-// Criar toggle para painel de customização
-createCustomizationToggle();
-
     // Configurar atalhos de teclado
     setupKeyboardShortcuts();
+    
+    // Criar toggle para painel de customização
+    createCustomizationToggle();
     
     BrandManualUtils.devLog('Manual da Marca inicializado com sucesso!');
     
@@ -68,6 +68,68 @@ function checkBrowserSupport() {
             setTimeout(() => {
                 alert('⚠️ Seu navegador pode ter limitações. Recomendamos usar Chrome, Firefox ou Edge mais recentes.');
             }, 2000);
+        }
+    }
+}
+
+/**
+ * Criar toggle switch para painel de customização
+ */
+function createCustomizationToggle() {
+    const controls = document.querySelector('.controls');
+    if (!controls) return;
+    
+    // Criar container do toggle
+    const toggleContainer = document.createElement('div');
+    toggleContainer.className = 'customization-toggle-container';
+    toggleContainer.innerHTML = `
+        <label class="switch-label">
+            <span class="switch-text">🎨 Customização Avançada</span>
+            <label class="switch">
+                <input type="checkbox" id="customizationToggle" onchange="handleCustomizationToggle(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </label>
+    `;
+    
+    // Inserir antes do primeiro botão
+    const firstButton = controls.querySelector('.btn');
+    if (firstButton) {
+        controls.insertBefore(toggleContainer, firstButton);
+    } else {
+        controls.appendChild(toggleContainer);
+    }
+    
+    // Verificar estado salvo
+    if (typeof(Storage) !== "undefined") {
+        const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
+        if (savedState === 'true') {
+            document.getElementById('customizationToggle').checked = true;
+        }
+    }
+    
+    BrandManualUtils.devLog('Toggle de customização criado');
+}
+
+/**
+ * Handler para o toggle de customização
+ */
+function handleCustomizationToggle(checked) {
+    if (window.BrandManualCustomization && window.BrandManualCustomization.toggleCustomizationPanel) {
+        window.BrandManualCustomization.toggleCustomizationPanel(checked);
+        BrandManualUtils.showSuccess(checked ? 
+            'Painel de customização ativado!' : 
+            'Painel de customização desativado!'
+        );
+        
+        // Fazer scroll suave para o painel se estiver sendo mostrado
+        if (checked) {
+            setTimeout(() => {
+                const panel = document.getElementById('customization');
+                if (panel) {
+                    panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }, 400);
         }
     }
 }
@@ -114,59 +176,6 @@ function setupEventListeners() {
     setupSectionNavigation();
     
     BrandManualUtils.devLog('Event listeners configurados');
-
-    /**
- * Criar toggle switch para painel de customização
- */
-function createCustomizationToggle() {
-    const controls = document.querySelector('.controls');
-    if (!controls) return;
-    
-    // Criar container do toggle
-    const toggleContainer = document.createElement('div');
-    toggleContainer.className = 'customization-toggle-container';
-    toggleContainer.innerHTML = `
-        <label class="switch-label">
-            <span class="switch-text">🎨 Customização Avançada</span>
-            <label class="switch">
-                <input type="checkbox" id="customizationToggle" onchange="handleCustomizationToggle(this.checked)">
-                <span class="slider"></span>
-            </label>
-        </label>
-    `;
-    
-    // Inserir antes do primeiro botão
-    const firstButton = controls.querySelector('.btn');
-    if (firstButton) {
-        controls.insertBefore(toggleContainer, firstButton);
-    } else {
-        controls.appendChild(toggleContainer);
-    }
-    
-    // Verificar estado salvo
-    if (typeof(Storage) !== "undefined") {
-        const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
-        if (savedState === 'true') {
-            document.getElementById('customizationToggle').checked = true;
-        }
-    }
-}
-
-/**
- * Handler para o toggle de customização
- */
-function handleCustomizationToggle(checked) {
-    if (window.BrandManualCustomization && window.BrandManualCustomization.toggleCustomizationPanel) {
-        window.BrandManualCustomization.toggleCustomizationPanel(checked);
-        BrandManualUtils.showSuccess(checked ? 
-            'Painel de customização ativado!' : 
-            'Painel de customização desativado!'
-        );
-    }
-}
-
-// Adicionar ao window para acessibilidade global
-window.handleCustomizationToggle = handleCustomizationToggle;
 }
 
 /**
@@ -406,7 +415,7 @@ function setupSectionNavigation() {
         
         const a = document.createElement('a');
         a.href = '#';
-        a.textContent = `${index + 1}. ${section.textContent.replace(/[🏢🎯🎨✍️🗣️📋📱📞]/g, '').trim()}`;
+        a.textContent = `${index + 1}. ${section.textContent.replace(/[🏢🎯🎨✏️🗣️📋📱📞]/g, '').trim()}`;
         a.style.cssText = `
             text-decoration: none;
             color: var(--primary-color);
@@ -523,6 +532,17 @@ function showHelpModal() {
             <li>Use cores contrastantes para melhor legibilidade</li>
             <li>O logo deve ter boa qualidade (mín. 200px)</li>
             <li>Teste o preview antes de exportar</li>
+            <li>Ative a Customização Avançada para mais opções visuais</li>
+        </ul>
+        
+        <h3>🎨 Customização Avançada</h3>
+        <p>Use o toggle "Customização Avançada" no topo da página para acessar opções avançadas de personalização visual, incluindo:</p>
+        <ul>
+            <li>Temas predefinidos</li>
+            <li>Customização de seções individuais</li>
+            <li>Paleta de cores expandida</li>
+            <li>Configurações de tipografia</li>
+            <li>Ajustes de layout</li>
         </ul>
     `;
     
@@ -622,6 +642,8 @@ function showWelcomeMessage() {
                     <li>Exporte o manual completo</li>
                 </ol>
                 
+                <p><strong>🎨 Novo!</strong> Ative a "Customização Avançada" no topo da página para acessar opções visuais extras!</p>
+                
                 <p><strong>💡 Dica:</strong> Seus dados são salvos automaticamente!</p>
                 
                 <div style="text-align: center; margin-top: 20px;">
@@ -660,6 +682,7 @@ window.clearAllData = BrandManualStorage.clearAllData;
 window.previewManual = BrandManualPreview.previewManual;
 window.exportHTML = BrandManualExport.exportHTML;
 window.exportPDF = BrandManualExport.exportPDF;
+window.handleCustomizationToggle = handleCustomizationToggle;
 
 // Tratamento de erros globais
 window.addEventListener('error', function(e) {
@@ -675,4 +698,3 @@ window.addEventListener('unhandledrejection', function(e) {
 });
 
 BrandManualUtils.devLog('App.js carregado com sucesso');
-

@@ -7,11 +7,10 @@
 // CONFIGURAÇÃO INICIAL E DADOS
 // ============================================================================
 
-// Configuração para ocultar o painel (como solicitado)
+// Estado dinâmico do painel de customização
 let showCustomizationPanel = false;
 
-
-// Dados de customização global (movido para o topo para evitar hoisting issues)
+// Dados de customização global
 let customizationData = {
     coverPage: {
         enabled: true,
@@ -106,7 +105,7 @@ let customizationData = {
         'tipografia': {
             enabled: true,
             backgroundColor: '#f8f9fa',
-            icon: '✍️',
+            icon: '✏️',
             titleColor: '#2c3e50',
             customTitle: null,
             layout: 'grid',
@@ -207,11 +206,11 @@ const themePresets = {
 
 // Ícones disponíveis
 const availableIcons = [
-    '🏢', '🎯', '🎨', '✍️', '🗣️', '📋', '📱', '📞',
+    '🏢', '🎯', '🎨', '✏️', '🗣️', '📋', '📱', '📞',
     '🏨', '🌟', '💎', '🎭', '🚀', '💡', '📊', '🔧',
     '⭐', '🎪', '🎬', '🎵', '🎮', '🎲', '🎳', '🎯',
     '📚', '📝', '📰', '📄', '📑', '📈', '📉', '📊',
-    '💼', '💰', '💳', '💎', '💍', '🔑', '🔒', '🔓'
+    '💼', '💰', '💳', '💎', '👑', '🔐', '🔑', '🔓'
 ];
 
 // ============================================================================
@@ -258,6 +257,7 @@ function initCustomization() {
         console.error('[Customization] Erro na inicialização:', error);
     }
 }
+
 /**
  * Alternar visibilidade do painel de customização
  */
@@ -275,17 +275,29 @@ function toggleCustomizationPanel(show) {
             createCustomizationPanel();
             createAdvancedTabs();
             setupAdvancedListeners();
+            
+            // Aplicar animação de entrada
+            setTimeout(() => {
+                const panel = document.getElementById('customization');
+                if (panel) {
+                    panel.style.animation = 'slideInFromTop 0.6s ease-out';
+                }
+            }, 100);
         }
     } else {
-        // Remover painel
+        // Remover painel com animação
         const panel = document.getElementById('customization');
         if (panel) {
-            panel.remove();
+            panel.style.animation = 'fadeOut 0.3s ease-out';
+            setTimeout(() => {
+                panel.remove();
+            }, 300);
         }
     }
     
     console.log('[Customization] Painel', show ? 'mostrado' : 'oculto');
 }
+
 /**
  * Criar painel de customização
  */
@@ -341,7 +353,7 @@ function createCustomizationPanel() {
 
         <!-- Configurações globais -->
         <div class="customization-group">
-            <h3>🌍 Configurações Globais</h3>
+            <h3>🌐 Configurações Globais</h3>
             <div class="grid grid-3">
                 <div class="form-group">
                     <label>Tema Predefinido</label>
@@ -620,7 +632,7 @@ function createAdvancedTabs() {
             <div class="tabs-nav">
                 <button class="tab-btn active" onclick="switchAdvancedTab('sections')">📋 Seções</button>
                 <button class="tab-btn" onclick="switchAdvancedTab('colors')">🎨 Cores</button>
-                <button class="tab-btn" onclick="switchAdvancedTab('typography')">✍️ Tipografia</button>
+                <button class="tab-btn" onclick="switchAdvancedTab('typography')">✏️ Tipografia</button>
                 <button class="tab-btn" onclick="switchAdvancedTab('layout')">📐 Layout</button>
             </div>
         </div>
@@ -744,7 +756,7 @@ function generateSectionControls(sectionId, sectionData) {
                     <div class="icon-selector">
                         <input type="text" class="form-control" value="${sectionData.icon}" 
                                onchange="updateSectionIcon('${sectionId}', this.value)" maxlength="2">
-                        <button type="button" class="btn-icon-picker" onclick="showIconPicker('${sectionId}')">📝</button>
+                        <button type="button" class="btn-icon-picker" onclick="showIconPicker('${sectionId}')">🔍</button>
                     </div>
                     <div class="icon-picker" id="iconPicker-${sectionId}" style="display: none;">
                         ${generateIconPicker(sectionId)}
@@ -825,7 +837,7 @@ function generateColorsTab() {
 function generateTypographyTab() {
     return `
         <div class="tab-content" id="tab-typography" style="display: none;">
-            <h4>✍️ Configurações Tipográficas</h4>
+            <h4>✏️ Configurações Tipográficas</h4>
             <div class="grid grid-2">
                 <div class="form-group">
                     <label>Fonte Principal</label>
@@ -992,7 +1004,7 @@ function applySectionChanges(sectionId) {
         titleElement.style.color = sectionData.titleColor;
         
         // Extrair texto original sem ícone e número
-        const originalText = titleElement.textContent.replace(/^[🏢🎯🎨✍️🗣️📋📱📞]\s*\d*\.\s*/, '');
+        const originalText = titleElement.textContent.replace(/^[🏢🎯🎨✏️🗣️📋📱📞]\s*\d*\.\s*/, '');
         const sectionNumber = titleElement.textContent.match(/\d+\./)?.[0] || '';
         const finalTitle = sectionData.customTitle || originalText;
         
@@ -1434,7 +1446,7 @@ function resetCustomizations() {
         
         // Resetar seções para valores padrão
         const defaultSections = ['info-basicas', 'identidade', 'logotipo', 'cores', 'tipografia', 'tom-voz', 'aplicacoes', 'redes-sociais', 'contatos'];
-        const defaultIcons = ['🏢', '🎯', '🎨', '🎨', '✍️', '🗣️', '📋', '📱', '📞'];
+        const defaultIcons = ['🏢', '🎯', '🎨', '🎨', '✏️', '🗣️', '📋', '📱', '📞'];
         
         defaultSections.forEach((sectionId, index) => {
             customizationData.sections[sectionId] = {
@@ -1459,7 +1471,7 @@ function resetCustomizations() {
         }
         
         // Recriar painel se necessário
-        if (SHOW_CUSTOMIZATION_PANEL) {
+        if (showCustomizationPanel) {
             const existingPanel = document.getElementById('customization');
             if (existingPanel) {
                 existingPanel.remove();
@@ -1588,7 +1600,7 @@ function importCustomizationConfig() {
                     customizationData = { ...customizationData, ...configData.customizations };
                     
                     // Recriar painel com novos dados se necessário
-                    if (SHOW_CUSTOMIZATION_PANEL) {
+                    if (showCustomizationPanel) {
                         const existingPanel = document.getElementById('customization');
                         if (existingPanel) {
                             existingPanel.remove();
@@ -1771,6 +1783,7 @@ function conditionalInit() {
 window.BrandManualCustomization = {
     // Funções principais
     initCustomization,
+    toggleCustomizationPanel,
     updateCoverSettings,
     previewCoverBackground,
     updateHeaderBackground,
@@ -1804,16 +1817,15 @@ window.BrandManualCustomization = {
     // Utilitários
     loadCustomizationData,
     checkDependencies,
-
-    toggleCustomizationPanel,  // ADD THIS
-    get isPanelVisible() { return showCustomizationPanel; }, 
     
     // Getters/Setters
     get customizationData() { return customizationData; },
-    set customizationData(data) { customizationData = data; }
+    set customizationData(data) { customizationData = data; },
+    get isPanelVisible() { return showCustomizationPanel; }
 };
 
 // Funções globais para compatibilidade com HTML inline
+window.toggleCustomizationPanel = toggleCustomizationPanel;
 window.updateCoverSettings = updateCoverSettings;
 window.previewCoverBackground = previewCoverBackground;
 window.updateHeaderBackground = updateHeaderBackground;
@@ -1836,8 +1848,6 @@ window.updateAdvancedTypography = updateAdvancedTypography;
 window.updateAdvancedLayout = updateAdvancedLayout;
 window.exportCustomizationConfig = exportCustomizationConfig;
 window.importCustomizationConfig = importCustomizationConfig;
-window.toggleCustomizationPanel = toggleCustomizationPanel;
-
 
 // ============================================================================
 // INICIALIZAÇÃO E TRATAMENTO DE ERROS
@@ -1851,6 +1861,29 @@ window.addEventListener('error', function(e) {
         console.error('[Customization] Erro capturado:', e.error);
     }
 });
+
+/**
+ * Adicionar estilos de animação
+ */
+const animationStyles = document.createElement('style');
+animationStyles.textContent = `
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
+    }
+    
+    @keyframes slideInFromTop {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+`;
+document.head.appendChild(animationStyles);
 
 /**
  * Inicializar quando DOM estiver pronto
@@ -1872,9 +1905,9 @@ if (document.readyState === 'loading') {
 // LOGS FINAIS
 // ============================================================================
 
-console.log('[Customization] Sistema de Customização Expandido carregado - Versão 2.0');
+console.log('[Customization] Sistema de Customização Expandido carregado - Versão 2.1 com Toggle');
 console.log('[Customization] Configuração:', {
-    'Painel Visível': SHOW_CUSTOMIZATION_PANEL,
+    'Painel Visível': showCustomizationPanel,
     'Temas Predefinidos': Object.keys(themePresets).length,
     'Ícones Disponíveis': availableIcons.length,
     'Seções Configuráveis': Object.keys(customizationData.sections).length,
