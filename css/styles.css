@@ -504,3 +504,110 @@ textarea.form-control {
         background: white;
     }
 }
+
+/* Toggle Switch para Customização */
+.customization-toggle-container {
+    display: inline-flex;
+    align-items: center;
+    margin-right: 15px;
+    background: white;
+    padding: 8px 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.switch-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.switch-text {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: 0.95rem;
+}
+
+/* The switch - the box around the slider */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 26px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* The slider */
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 26px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #667eea;
+}
+
+input:checked + .slider:before {
+    transform: translateX(24px);
+}
+
+/* Dark theme support for toggle */
+[data-theme="dark"] .customization-toggle-container {
+    background: var(--card-bg);
+}
+
+[data-theme="dark"] .switch-text {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .slider {
+    background-color: #555;
+}
+
+[data-theme="dark"] input:checked + .slider {
+    background: linear-gradient(45deg, #4a90e2, #5da6f0);
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .customization-toggle-container {
+        width: 100%;
+        margin-bottom: 10px;
+        justify-content: space-between;
+    }
+    
+    .switch-label {
+        width: 100%;
+        justify-content: space-between;
+    }
+}

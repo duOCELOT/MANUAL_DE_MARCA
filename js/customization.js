@@ -8,7 +8,8 @@
 // ============================================================================
 
 // Configuração para ocultar o painel (como solicitado)
-const SHOW_CUSTOMIZATION_PANEL = false;
+let showCustomizationPanel = false;
+
 
 // Dados de customização global (movido para o topo para evitar hoisting issues)
 let customizationData = {
@@ -224,13 +225,25 @@ function initCustomization() {
     console.log('[Customization] Inicializando sistema...');
     
     try {
-        // Só criar o painel se estiver habilitado
-        if (SHOW_CUSTOMIZATION_PANEL) {
+        // Verificar estado salvo do painel
+        if (typeof(Storage) !== "undefined") {
+            const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
+            if (savedState !== null) {
+                showCustomizationPanel = savedState === 'true';
+            }
+        }
+        
+        // Criar ou remover painel baseado no estado
+        if (showCustomizationPanel) {
             createCustomizationPanel();
             createAdvancedTabs();
             setupAdvancedListeners();
         } else {
-            console.log('[Customization] Painel de customização oculto conforme configuração');
+            // Remover painel se existir
+            const existingPanel = document.getElementById('customization');
+            if (existingPanel) {
+                existingPanel.remove();
+            }
         }
         
         loadCustomizationData();
@@ -245,7 +258,34 @@ function initCustomization() {
         console.error('[Customization] Erro na inicialização:', error);
     }
 }
-
+/**
+ * Alternar visibilidade do painel de customização
+ */
+function toggleCustomizationPanel(show) {
+    showCustomizationPanel = show;
+    
+    // Salvar preferência
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem('brandManual_customizationPanelVisible', show.toString());
+    }
+    
+    if (show) {
+        // Criar painel se não existir
+        if (!document.getElementById('customization')) {
+            createCustomizationPanel();
+            createAdvancedTabs();
+            setupAdvancedListeners();
+        }
+    } else {
+        // Remover painel
+        const panel = document.getElementById('customization');
+        if (panel) {
+            panel.remove();
+        }
+    }
+    
+    console.log('[Customization] Painel', show ? 'mostrado' : 'oculto');
+}
 /**
  * Criar painel de customização
  */
@@ -1764,6 +1804,9 @@ window.BrandManualCustomization = {
     // Utilitários
     loadCustomizationData,
     checkDependencies,
+
+    toggleCustomizationPanel,  // ADD THIS
+    get isPanelVisible() { return showCustomizationPanel; }, 
     
     // Getters/Setters
     get customizationData() { return customizationData; },
@@ -1793,6 +1836,8 @@ window.updateAdvancedTypography = updateAdvancedTypography;
 window.updateAdvancedLayout = updateAdvancedLayout;
 window.exportCustomizationConfig = exportCustomizationConfig;
 window.importCustomizationConfig = importCustomizationConfig;
+window.toggleCustomizationPanel = toggleCustomizationPanel;
+
 
 // ============================================================================
 // INICIALIZAÇÃO E TRATAMENTO DE ERROS

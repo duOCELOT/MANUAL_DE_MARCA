@@ -29,6 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicializar preview das cores
     updateColorPreview();
     
+// Criar toggle para painel de customização
+createCustomizationToggle();
+
     // Configurar atalhos de teclado
     setupKeyboardShortcuts();
     
@@ -111,6 +114,59 @@ function setupEventListeners() {
     setupSectionNavigation();
     
     BrandManualUtils.devLog('Event listeners configurados');
+
+    /**
+ * Criar toggle switch para painel de customização
+ */
+function createCustomizationToggle() {
+    const controls = document.querySelector('.controls');
+    if (!controls) return;
+    
+    // Criar container do toggle
+    const toggleContainer = document.createElement('div');
+    toggleContainer.className = 'customization-toggle-container';
+    toggleContainer.innerHTML = `
+        <label class="switch-label">
+            <span class="switch-text">🎨 Customização Avançada</span>
+            <label class="switch">
+                <input type="checkbox" id="customizationToggle" onchange="handleCustomizationToggle(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </label>
+    `;
+    
+    // Inserir antes do primeiro botão
+    const firstButton = controls.querySelector('.btn');
+    if (firstButton) {
+        controls.insertBefore(toggleContainer, firstButton);
+    } else {
+        controls.appendChild(toggleContainer);
+    }
+    
+    // Verificar estado salvo
+    if (typeof(Storage) !== "undefined") {
+        const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
+        if (savedState === 'true') {
+            document.getElementById('customizationToggle').checked = true;
+        }
+    }
+}
+
+/**
+ * Handler para o toggle de customização
+ */
+function handleCustomizationToggle(checked) {
+    if (window.BrandManualCustomization && window.BrandManualCustomization.toggleCustomizationPanel) {
+        window.BrandManualCustomization.toggleCustomizationPanel(checked);
+        BrandManualUtils.showSuccess(checked ? 
+            'Painel de customização ativado!' : 
+            'Painel de customização desativado!'
+        );
+    }
+}
+
+// Adicionar ao window para acessibilidade global
+window.handleCustomizationToggle = handleCustomizationToggle;
 }
 
 /**
