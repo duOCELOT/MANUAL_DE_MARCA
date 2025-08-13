@@ -798,167 +798,19 @@ function generateClassicContent(data, logoSrc, hotelName) {
 }
 
 /**
- * Open image generator tool
+ * Script JavaScript para o template
  */
-function openImageGenerator() {
-    const generatorWindow = window.open('', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-    
-    if (generatorWindow) {
-        // You can either load the generator tool HTML file or create it inline
-        generatorWindow.document.write(`
-            <!DOCTYPE html>
-            <html><head><title>Template Image Generator</title></head>
-            <body>
-                <h1>🎨 Template Preview Generator</h1>
-                <p>Para gerar as imagens de preview dos templates, você pode:</p>
-                <ol>
-                    <li>Salvar o arquivo "Template Preview Image Generator" como um HTML separado</li>
-                    <li>Abrir o arquivo em seu navegador</li>
-                    <li>Clicar em "Generate All" para criar todas as imagens</li>
-                    <li>Fazer download das imagens geradas</li>
-                    <li>Colocar as imagens na pasta "templates/previews/" do seu projeto</li>
-                </ol>
-                <p><strong>Estrutura de pastas recomendada:</strong></p>
-                <pre>
-templates/
-└── previews/
-    ├── classic-preview.png
-    ├── constitution-preview.png
-    ├── modern-preview.png
-    ├── minimalist-preview.png
-    └── luxury-preview.png
-                </pre>
-                <button onclick="window.close()" style="margin-top: 20px; padding: 10px 20px;">Fechar</button>
-            </body></html>
-        `);
-        generatorWindow.document.close();
-    } else {
-        BrandManualUtils.showError('Pop-up bloqueado! Permita pop-ups para usar esta função.');
-    }
-}
-
-/**
- * Show template guide
- */
-function showTemplateGuide() {
-    const guideContent = `
-        <h3>📖 Guia de Templates</h3>
+function getTemplateScript(template) {
+    return `
+        console.log('Template ${template.id} carregado');
         
-        <div style="text-align: left; max-height: 400px; overflow-y: auto;">
-            <h4>🏛️ Classic Template (16:9)</h4>
-            <p><strong>Melhor para:</strong> Hotéis tradicionais, empresariais</p>
-            <p><strong>Características:</strong> Layout limpo, cores conservadoras, tipografia tradicional</p>
-            
-            <h4>📜 Constitution Template (4:3)</h4>
-            <p><strong>Melhor para:</strong> Hotéis boutique, marcas estabelecidas</p>
-            <p><strong>Características:</strong> Design formal, inspirado em documentos oficiais, elegante</p>
-            
-            <h4>🚀 Modern Template (16:9)</h4>
-            <p><strong>Melhor para:</strong> Hotéis contemporâneos, urbanos</p>
-            <p><strong>Características:</strong> Design dinâmico, gradientes, elementos visuais modernos</p>
-            
-            <h4>⚪ Minimalist Template (4:3)</h4>
-            <p><strong>Melhor para:</strong> Hotéis conceituais, eco-friendly</p>
-            <p><strong>Características:</strong> Foco no conteúdo, sem distrações, tipografia limpa</p>
-            
-            <h4>💎 Luxury Template (16:9)</h4>
-            <p><strong>Melhor para:</strong> Hotéis premium, resorts de luxo</p>
-            <p><strong>Características:</strong> Detalhes dourados, design sofisticado, elementos premium</p>
-            
-            <hr style="margin: 20px 0;">
-            
-            <h4>💡 Dicas de Escolha:</h4>
-            <ul style="text-align: left;">
-                <li><strong>4:3</strong> - Ideal para documentos formais e impressão</li>
-                <li><strong>16:9</strong> - Perfeito para apresentações e telas</li>
-                <li>Considere o público-alvo do seu hotel</li>
-                <li>Pense na personalidade da marca</li>
-                <li>Teste diferentes templates com seus dados</li>
-            </ul>
-        </div>
+        // Fechar ao pressionar ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.close();
+            }
+        });
     `;
-    
-    showModal('Guia de Templates', guideContent);
-}
-
-/**
- * Show modal helper function
- */
-function showModal(title, content) {
-    // Remove existing modal
-    const existingModal = document.getElementById('template-modal');
-    if (existingModal) {
-        existingModal.remove();
-    }
-    
-    const modal = document.createElement('div');
-    modal.id = 'template-modal';
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.5);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 10000;
-        backdrop-filter: blur(5px);
-    `;
-    
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: var(--card-bg, white);
-        color: var(--text-color, #2c3e50);
-        padding: 30px;
-        border-radius: 15px;
-        max-width: 600px;
-        max-height: 80vh;
-        overflow-y: auto;
-        position: relative;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        border: 1px solid var(--border-color, #e0e0e0);
-    `;
-    
-    modalContent.innerHTML = `
-        <button onclick="this.parentElement.parentElement.remove()" style="
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--danger-color, #e74c3c);
-            color: white;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        ">✕</button>
-        <h2 style="margin-bottom: 20px; color: var(--primary-color, #2c3e50);">${title}</h2>
-        ${content}
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    // Close on background click
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
-    
-    // Close on ESC key
-    document.addEventListener('keydown', function escapeHandler(e) {
-        if (e.key === 'Escape') {
-            modal.remove();
-            document.removeEventListener('keydown', escapeHandler);
-        }
-    });
 }
 
 /**
@@ -1033,19 +885,13 @@ window.BrandManualTemplates = {
     initializeTemplateSystem,
     selectTemplate,
     previewSelectedTemplate,
-    previewSpecificTemplate,
     getSelectedTemplate,
     applyTemplateToExport,
-    openImageGenerator,
-    showTemplateGuide,
     TEMPLATES
 };
 
 // Funções globais para compatibilidade
 window.selectTemplate = selectTemplate;
 window.previewSelectedTemplate = previewSelectedTemplate;
-window.previewSpecificTemplate = previewSpecificTemplate;
-window.openImageGenerator = openImageGenerator;
-window.showTemplateGuide = showTemplateGuide;
 
-BrandManualUtils.devLog('Visual template system with image previews loaded successfully');
+BrandManualUtils.devLog('Template system loaded successfully');
