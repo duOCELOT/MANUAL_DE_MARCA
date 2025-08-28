@@ -1,14 +1,25 @@
-/* Sistema de Customização - Estilos */
+/* ============================================================================
+   SISTEMA DE CUSTOMIZAÇÃO AVANÇADA - CSS CORRIGIDO v2.2
+   Arquivo: css/customization.css
+   Data: 2024
+   ============================================================================ */
 
-/* Painel de Customização */
+/* ============================================================================
+   PAINEL DE CUSTOMIZAÇÃO PRINCIPAL
+   ============================================================================ */
+
 .customization-panel {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: 3px solid #4a90e2;
-    position: relative;
-    overflow: hidden;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
+    border: 3px solid #4a90e2 !important;
+    position: relative !important;
+    overflow: hidden !important;
+    margin-bottom: 30px !important;
+    z-index: 10 !important;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2) !important;
 }
 
+/* Efeito de brilho animado */
 .customization-panel::before {
     content: '';
     position: absolute;
@@ -18,268 +29,872 @@
     height: 200%;
     background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
     animation: customizationGlow 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
 }
 
 @keyframes customizationGlow {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.6; transform: scale(1.05); }
+    0%, 100% { 
+        opacity: 0.3; 
+        transform: scale(1); 
+    }
+    50% { 
+        opacity: 0.6; 
+        transform: scale(1.05); 
+    }
 }
 
+/* ============================================================================
+   TÍTULOS E TEXTOS
+   ============================================================================ */
+
 .customization-panel h2 {
-    color: white;
-    border-bottom-color: rgba(255,255,255,0.3);
-    position: relative;
-    z-index: 1;
+    color: white !important;
+    border-bottom: 3px solid rgba(255,255,255,0.3) !important;
+    position: relative !important;
+    z-index: 2 !important;
+    margin-bottom: 25px !important;
+    padding-bottom: 10px !important;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3) !important;
 }
 
 .customization-panel h3 {
-    color: rgba(255,255,255,0.95);
-    position: relative;
-    z-index: 1;
+    color: rgba(255,255,255,0.95) !important;
+    position: relative !important;
+    z-index: 2 !important;
+    margin-bottom: 15px !important;
+    font-size: 1.2rem !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
 }
 
-/* Grupos de Customização */
+.customization-panel p {
+    position: relative !important;
+    z-index: 2 !important;
+    opacity: 0.9 !important;
+    line-height: 1.5 !important;
+}
+
+/* ============================================================================
+   CONTROLES DE FORMULÁRIO
+   ============================================================================ */
+
+.customization-control {
+    width: 100% !important;
+    padding: 10px 12px !important;
+    background: rgba(255,255,255,0.15) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+    font-size: 14px !important;
+    font-family: inherit !important;
+}
+
+.customization-control:focus {
+    background: rgba(255,255,255,0.25) !important;
+    border-color: rgba(255,255,255,0.6) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.customization-control:hover {
+    background: rgba(255,255,255,0.2) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+.customization-control::placeholder {
+    color: rgba(255,255,255,0.7) !important;
+}
+
+/* Selects específicos */
+.customization-control option {
+    background: #4a90e2 !important;
+    color: white !important;
+    padding: 8px !important;
+    border: none !important;
+}
+
+.customization-control select {
+    cursor: pointer !important;
+}
+
+/* Color inputs */
+.customization-control[type="color"] {
+    width: 60px !important;
+    height: 40px !important;
+    padding: 4px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    border: 2px solid rgba(255,255,255,0.3) !important;
+}
+
+.customization-control[type="color"]:hover {
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+    border-color: rgba(255,255,255,0.6) !important;
+}
+
+.customization-control[type="color"]:focus {
+    transform: scale(1.1) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4) !important;
+}
+
+/* Range inputs */
+.customization-control[type="range"] {
+    background: rgba(255,255,255,0.2) !important;
+    outline: none !important;
+    height: 6px !important;
+    border-radius: 3px !important;
+    border: none !important;
+    cursor: pointer !important;
+}
+
+.customization-control[type="range"]::-webkit-slider-track {
+    background: rgba(255,255,255,0.3) !important;
+    height: 6px !important;
+    border-radius: 3px !important;
+}
+
+.customization-control[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: white !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+    transition: all 0.3s ease !important;
+}
+
+.customization-control[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4) !important;
+}
+
+.customization-control[type="range"]::-moz-range-thumb {
+    width: 18px !important;
+    height: 18px !important;
+    border-radius: 50% !important;
+    background: white !important;
+    cursor: pointer !important;
+    border: none !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+}
+
+/* File inputs */
+.customization-control[type="file"] {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    opacity: 0 !important;
+    cursor: pointer !important;
+}
+
+/* ============================================================================
+   LABELS E FORM GROUPS
+   ============================================================================ */
+
+.customization-panel .form-group {
+    margin-bottom: 20px !important;
+    position: relative !important;
+    z-index: 2 !important;
+}
+
+.customization-panel .form-group label {
+    color: rgba(255,255,255,0.9) !important;
+    font-weight: 500 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+    font-size: 14px !important;
+}
+
+/* ============================================================================
+   BOTÕES
+   ============================================================================ */
+
+.customization-btn {
+    padding: 12px 24px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-weight: 600 !important;
+    border: none !important;
+    font-size: 14px !important;
+    position: relative !important;
+    z-index: 2 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    text-decoration: none !important;
+    font-family: inherit !important;
+}
+
+.customization-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
+}
+
+.customization-btn:active {
+    transform: translateY(-1px) !important;
+    transition: transform 0.1s ease !important;
+}
+
+.customization-btn:focus {
+    outline: 2px solid rgba(255,255,255,0.8) !important;
+    outline-offset: 2px !important;
+}
+
+/* Botões específicos */
+.customization-btn-primary {
+    background: rgba(255,255,255,0.9) !important;
+    color: #4a90e2 !important;
+}
+
+.customization-btn-primary:hover {
+    background: white !important;
+    color: #357abd !important;
+}
+
+.customization-btn-success {
+    background: #27ae60 !important;
+    color: white !important;
+}
+
+.customization-btn-success:hover {
+    background: #219a52 !important;
+}
+
+.customization-btn-warning {
+    background: #f39c12 !important;
+    color: white !important;
+}
+
+.customization-btn-warning:hover {
+    background: #e67e22 !important;
+}
+
+.customization-btn-danger {
+    background: #e74c3c !important;
+    color: white !important;
+}
+
+.customization-btn-danger:hover {
+    background: #c0392b !important;
+}
+
+.customization-btn-info {
+    background: #17a2b8 !important;
+    color: white !important;
+}
+
+.customization-btn-info:hover {
+    background: #138496 !important;
+}
+
+/* ============================================================================
+   GRUPOS E CONTAINERS
+   ============================================================================ */
+
 .customization-group {
-    background: rgba(255,255,255,0.1);
-    padding: 25px;
-    border-radius: 12px;
-    margin: 25px 0;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    position: relative;
-    z-index: 1;
+    background: rgba(255,255,255,0.1) !important;
+    padding: 25px !important;
+    border-radius: 12px !important;
+    margin: 25px 0 !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    position: relative !important;
+    z-index: 2 !important;
+    transition: all 0.3s ease !important;
 }
 
-.customization-group h3 {
-    margin-bottom: 20px;
-    font-size: 1.2rem;
+.customization-group:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2) !important;
 }
 
-/* Customizador de Seções */
-.sections-customizer {
-    max-height: 400px;
-    overflow-y: auto;
-    padding-right: 10px;
+/* ============================================================================
+   GRID LAYOUTS
+   ============================================================================ */
+
+.customization-panel .grid {
+    display: grid !important;
+    gap: 15px !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.sections-customizer::-webkit-scrollbar {
-    width: 8px;
+.customization-panel .grid-2 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
 }
 
-.sections-customizer::-webkit-scrollbar-track {
-    background: rgba(255,255,255,0.1);
-    border-radius: 4px;
+.customization-panel .grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)) !important;
 }
 
-.sections-customizer::-webkit-scrollbar-thumb {
-    background: rgba(255,255,255,0.3);
-    border-radius: 4px;
+/* ============================================================================
+   PREVIEW DE CORES
+   ============================================================================ */
+
+#colorPreviewCustom {
+    display: flex !important;
+    gap: 10px !important;
+    margin-top: 15px !important;
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.sections-customizer::-webkit-scrollbar-thumb:hover {
-    background: rgba(255,255,255,0.5);
+#colorPreviewCustom > div {
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+    cursor: pointer !important;
 }
 
-.section-customizer {
-    background: rgba(255,255,255,0.08);
-    border-radius: 8px;
-    margin-bottom: 15px;
-    border: 1px solid rgba(255,255,255,0.15);
-    overflow: hidden;
-    transition: all 0.3s ease;
+#colorPreviewCustom > div:hover {
+    transform: translateY(-2px) scale(1.05) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3) !important;
 }
 
-.section-customizer:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+/* ============================================================================
+   PREVIEW DA CAPA
+   ============================================================================ */
 
-.section-customizer-header {
-    padding: 15px 20px;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background 0.3s ease;
-}
-
-.section-customizer-header:hover {
-    background: rgba(255,255,255,0.1);
-}
-
-.section-customizer-header h4 {
-    color: white;
-    margin: 0;
-    font-size: 1rem;
-}
-
-.toggle-icon {
-    font-size: 0.8rem;
-    transition: transform 0.3s ease;
-    color: rgba(255,255,255,0.7);
-}
-
-.section-customizer-content {
-    padding: 20px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    background: rgba(255,255,255,0.05);
-}
-
-/* Preview da Capa */
 .cover-preview {
-    position: relative;
-    overflow: hidden;
-    border: 2px solid rgba(255,255,255,0.2) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    border: 2px dashed rgba(255,255,255,0.3) !important;
     background: rgba(255,255,255,0.05) !important;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease !important;
+    border-radius: 8px !important;
+    min-height: 150px !important;
 }
 
 .cover-preview:hover {
+    border-color: rgba(255,255,255,0.5) !important;
+    background: rgba(255,255,255,0.1) !important;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3) !important;
+}
+
+.cover-preview:not(:empty) {
+    border-style: solid !important;
     border-color: rgba(255,255,255,0.4) !important;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
 }
 
-/* Controles de Customização */
-.customization-controls {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 30px;
-    flex-wrap: wrap;
-    position: relative;
-    z-index: 1;
+/* ============================================================================
+   FILE INPUT WRAPPER
+   ============================================================================ */
+
+.file-input-wrapper {
+    position: relative !important;
+    display: inline-block !important;
+    cursor: pointer !important;
+    background: rgba(255,255,255,0.2) !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: white !important;
+    padding: 10px 15px !important;
+    border-radius: 6px !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
 }
 
-.customization-controls .btn {
-    background: rgba(255,255,255,0.9);
-    color: #4a90e2;
-    border: 2px solid rgba(255,255,255,0.3);
-    font-weight: 600;
-    padding: 12px 25px;
-    transition: all 0.3s ease;
+.file-input-wrapper:hover {
+    background: rgba(255,255,255,0.3) !important;
+    border-color: rgba(255,255,255,0.5) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
 }
 
-.customization-controls .btn:hover {
-    background: white;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+.file-input-wrapper:focus-within {
+    outline: 2px solid rgba(255,255,255,0.8) !important;
+    outline-offset: 2px !important;
 }
 
-.customization-controls .btn-primary {
-    background: linear-gradient(45deg, #4a90e2, #667eea);
-    color: white;
-    border-color: transparent;
+/* ============================================================================
+   ANIMAÇÕES
+   ============================================================================ */
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.customization-controls .btn-success {
-    background: linear-gradient(45deg, #27ae60, #2ecc71);
-    color: white;
-    border-color: transparent;
+@keyframes fadeOut {
+    from { 
+        opacity: 1; 
+        transform: scale(1);
+    }
+    to { 
+        opacity: 0;
+        transform: scale(0.95);
+    }
 }
 
-.customization-controls .btn-warning {
-    background: linear-gradient(45deg, #f39c12, #e67e22);
-    color: white;
-    border-color: transparent;
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(10px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Form Controls no Painel de Customização */
-.customization-panel .form-control {
-    background: rgba(255,255,255,0.15);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    border-radius: 6px;
-    transition: all 0.3s ease;
+@keyframes slideInRight {
+    from { 
+        transform: translateX(100%); 
+        opacity: 0; 
+    }
+    to { 
+        transform: translateX(0); 
+        opacity: 1; 
+    }
 }
 
-.customization-panel .form-control:focus {
-    background: rgba(255,255,255,0.25);
-    border-color: rgba(255,255,255,0.6);
-    box-shadow: 0 0 0 3px rgba(255,255,255,0.1);
-    color: white;
+@keyframes bounce {
+    0%, 20%, 53%, 80%, 100% {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
+    }
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -8px, 0);
+    }
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -4px, 0);
+    }
+    90% {
+        transform: translate3d(0, -2px, 0);
+    }
 }
 
-.customization-panel .form-control::placeholder {
-    color: rgba(255,255,255,0.7);
+.customization-panel {
+    animation: slideInFromTop 0.6s ease-out !important;
 }
 
-.customization-panel .form-control option {
-    background: #4a90e2;
-    color: white;
+.customization-fade-in {
+    animation: fadeIn 0.3s ease-out !important;
 }
 
-/* Labels no Painel */
-.customization-panel .form-group label {
-    color: rgba(255,255,255,0.9);
-    font-weight: 500;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+.customization-bounce {
+    animation: bounce 0.6s ease-out !important;
 }
 
-/* File Input Wrapper no Painel */
-.customization-panel .file-input-wrapper {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.3);
-    color: white;
-    transition: all 0.3s ease;
+/* ============================================================================
+   ESTADOS DE LOADING
+   ============================================================================ */
+
+.customization-loading {
+    position: relative !important;
+    pointer-events: none !important;
+    opacity: 0.6 !important;
 }
 
-.customization-panel .file-input-wrapper:hover {
-    background: rgba(255,255,255,0.3);
-    border-color: rgba(255,255,255,0.5);
-    transform: translateY(-2px);
-}
-
-/* Range Input Styling */
-.customization-panel input[type="range"] {
-    background: transparent;
-    outline: none;
-    height: 6px;
-    border-radius: 3px;
-}
-
-.customization-panel input[type="range"]::-webkit-slider-track {
-    background: rgba(255,255,255,0.3);
-    height: 6px;
-    border-radius: 3px;
-}
-
-.customization-panel input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 18px;
-    height: 18px;
+.customization-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30px;
+    height: 30px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top: 3px solid white;
     border-radius: 50%;
-    background: white;
-    cursor: pointer;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-    transition: all 0.3s ease;
+    animation: customizationSpin 1s linear infinite;
+    z-index: 10;
 }
 
-.customization-panel input[type="range"]::-webkit-slider-thumb:hover {
-    transform: scale(1.2);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+@keyframes customizationSpin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
-/* Color Input Styling */
-.customization-panel input[type="color"] {
-    width: 50px;
-    height: 35px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* ============================================================================
+   ESTADOS DE SUCESSO E ERRO
+   ============================================================================ */
+
+.customization-success {
+    background: rgba(39, 174, 96, 0.2) !important;
+    border-color: #27ae60 !important;
+    box-shadow: 0 0 20px rgba(39, 174, 96, 0.3) !important;
 }
 
-.customization-panel input[type="color"]:hover {
-    border-color: rgba(255,255,255,0.6);
-    transform: scale(1.05);
+.customization-error {
+    background: rgba(231, 76, 60, 0.2) !important;
+    border-color: #e74c3c !important;
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.3) !important;
 }
 
-/* Seções Customizadas */
+.customization-warning {
+    background: rgba(243, 156, 18, 0.2) !important;
+    border-color: #f39c12 !important;
+    box-shadow: 0 0 20px rgba(243, 156, 18, 0.3) !important;
+}
+
+/* ============================================================================
+   SCROLLBAR CUSTOMIZADA
+   ============================================================================ */
+
+.customization-panel {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.3) transparent;
+}
+
+.customization-panel::-webkit-scrollbar {
+    width: 8px;
+}
+
+.customization-panel::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+}
+
+.customization-panel::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.3);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+.customization-panel::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+
+/* ============================================================================
+   TOGGLE SWITCH CUSTOMIZADO
+   ============================================================================ */
+
+.customization-toggle-enhanced {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 12px !important;
+    background: rgba(255,255,255,0.1) !important;
+    padding: 10px 20px !important;
+    border-radius: 25px !important;
+    border: 2px solid rgba(255,255,255,0.2) !important;
+    transition: all 0.3s ease !important;
+    cursor: pointer !important;
+    user-select: none !important;
+}
+
+.customization-toggle-enhanced:hover {
+    background: rgba(255,255,255,0.2) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+}
+
+.customization-toggle-text {
+    color: rgba(255,255,255,0.9) !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3) !important;
+}
+
+/* ============================================================================
+   RESPONSIVIDADE
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    .customization-panel {
+        padding: 20px !important;
+        margin: 15px 0 !important;
+    }
+    
+    .customization-group {
+        padding: 20px !important;
+        margin: 20px 0 !important;
+    }
+    
+    .customization-panel .grid-2,
+    .customization-panel .grid-3 {
+        grid-template-columns: 1fr !important;
+    }
+    
+    .customization-btn {
+        width: 100% !important;
+        margin-bottom: 10px !important;
+        justify-content: center !important;
+    }
+    
+    #colorPreviewCustom {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .customization-control[type="color"] {
+        width: 80px !important;
+        height: 50px !important;
+    }
+    
+    .cover-preview {
+        min-height: 120px !important;
+    }
+    
+    .file-input-wrapper {
+        width: 100% !important;
+        text-align: center !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .customization-panel {
+        padding: 15px !important;
+    }
+    
+    .customization-group {
+        padding: 15px !important;
+    }
+    
+    .customization-panel h2 {
+        font-size: 1.4rem !important;
+    }
+    
+    .customization-panel h3 {
+        font-size: 1.1rem !important;
+    }
+    
+    .customization-btn {
+        padding: 10px 16px !important;
+        font-size: 13px !important;
+    }
+    
+    .customization-control {
+        padding: 8px 10px !important;
+        font-size: 13px !important;
+    }
+    
+    .cover-preview {
+        min-height: 100px !important;
+    }
+}
+
+/* ============================================================================
+   TEMA ESCURO
+   ============================================================================ */
+
+[data-theme="dark"] .customization-panel {
+    background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%) !important;
+    border-color: #4a90e2 !important;
+}
+
+[data-theme="dark"] .customization-group {
+    background: rgba(0,0,0,0.2) !important;
+    border-color: rgba(255,255,255,0.1) !important;
+}
+
+[data-theme="dark"] .customization-control {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+[data-theme="dark"] .customization-control:focus {
+    background: rgba(255,255,255,0.2) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+[data-theme="dark"] .customization-control:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+}
+
+[data-theme="dark"] .file-input-wrapper {
+    background: rgba(255,255,255,0.1) !important;
+    border-color: rgba(255,255,255,0.2) !important;
+}
+
+[data-theme="dark"] .file-input-wrapper:hover {
+    background: rgba(255,255,255,0.2) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+[data-theme="dark"] .cover-preview {
+    border-color: rgba(255,255,255,0.2) !important;
+    background: rgba(255,255,255,0.03) !important;
+}
+
+/* ============================================================================
+   ACESSIBILIDADE
+   ============================================================================ */
+
+.customization-panel .customization-control:focus,
+.customization-panel .customization-btn:focus,
+.customization-panel .file-input-wrapper:focus-within {
+    outline: 2px solid rgba(255,255,255,0.8) !important;
+    outline-offset: 2px !important;
+}
+
+/* Modo de alto contraste */
+@media (prefers-contrast: high) {
+    .customization-panel {
+        border-width: 4px !important;
+        border-color: white !important;
+    }
+    
+    .customization-control {
+        border-width: 2px !important;
+        border-color: white !important;
+    }
+    
+    .customization-group {
+        border-width: 2px !important;
+        border-color: rgba(255,255,255,0.5) !important;
+    }
+}
+
+/* Redução de movimento */
+@media (prefers-reduced-motion: reduce) {
+    .customization-panel,
+    .customization-panel::before,
+    .customization-control,
+    .customization-btn,
+    .customization-group,
+    #colorPreviewCustom > div,
+    .cover-preview,
+    .file-input-wrapper {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* ============================================================================
+   IMPRESSÃO
+   ============================================================================ */
+
+@media print {
+    .customization-panel {
+        display: none !important;
+    }
+}
+
+/* ============================================================================
+   UTILIDADES E HELPERS
+   ============================================================================ */
+
+.customization-hidden {
+    display: none !important;
+}
+
+.customization-visible {
+    display: block !important;
+}
+
+.customization-disabled {
+    opacity: 0.6 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+}
+
+.customization-highlight {
+    box-shadow: 0 0 20px rgba(255,255,255,0.4) !important;
+    border-color: rgba(255,255,255,0.6) !important;
+}
+
+/* ============================================================================
+   TOOLTIPS SIMPLES
+   ============================================================================ */
+
+.customization-tooltip {
+    position: relative !important;
+}
+
+.customization-tooltip::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1000;
+}
+
+.customization-tooltip:hover::after {
+    opacity: 1;
+}
+
+/* ============================================================================
+   TOGGLE PERSONALIZADO PARA SEÇÕES
+   ============================================================================ */
+
+.section-toggle {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    background: rgba(255,255,255,0.15) !important;
+    padding: 5px 12px !important;
+    border-radius: 15px !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    font-size: 12px !important;
+}
+
+.section-toggle:hover {
+    background: rgba(255,255,255,0.25) !important;
+    border-color: rgba(255,255,255,0.4) !important;
+}
+
+.section-toggle input[type="checkbox"] {
+    margin: 0 !important;
+    width: 14px !important;
+    height: 14px !important;
+}
+
+/* ============================================================================
+   PREVIEW MINI SECTIONS
+   ============================================================================ */
+
+.mini-preview {
+    background: rgba(255,255,255,0.1) !important;
+    padding: 10px !important;
+    border-radius: 6px !important;
+    margin-top: 10px !important;
+    border: 1px solid rgba(255,255,255,0.2) !important;
+    transition: all 0.3s ease !important;
+}
+
+.mini-preview:hover {
+    background: rgba(255,255,255,0.15) !important;
+    border-color: rgba(255,255,255,0.3) !important;
+}
+
+.mini-preview h4 {
+    margin: 0 !important;
+    font-size: 14px !important;
+    color: white !important;
+}
+
+/* ============================================================================
+   SEÇÕES CUSTOMIZADAS
+   ============================================================================ */
+
 .section.customized {
-    transition: all 0.5s ease;
-    position: relative;
+    position: relative !important;
+    transition: all 0.5s ease !important;
 }
 
 .section.customized::before {
@@ -290,17 +905,37 @@
     font-size: 1.2rem;
     opacity: 0.7;
     animation: sparkle 2s ease-in-out infinite;
+    z-index: 1;
 }
 
 @keyframes sparkle {
-    0%, 100% { opacity: 0.3; transform: scale(1); }
-    50% { opacity: 0.8; transform: scale(1.2); }
+    0%, 100% { 
+        opacity: 0.3; 
+        transform: scale(1); 
+    }
+    50% { 
+        opacity: 0.8; 
+        transform: scale(1.2); 
+    }
 }
 
-/* Header Customizado */
+.section.customization-applied {
+    box-shadow: 0 0 20px rgba(46, 204, 113, 0.3) !important;
+    border-left: 4px solid #2ecc71 !important;
+}
+
+.section.customization-warning {
+    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2) !important;
+    border-left: 4px solid #f1c40f !important;
+}
+
+/* ============================================================================
+   HEADER CUSTOMIZADO
+   ============================================================================ */
+
 .header.customized {
-    position: relative;
-    overflow: hidden;
+    position: relative !important;
+    overflow: hidden !important;
 }
 
 .header.customized::after {
@@ -316,117 +951,31 @@
     z-index: -1;
 }
 
-/* Small Text Styling */
-.customization-panel small {
-    color: rgba(255,255,255,0.8);
-    font-size: 0.8rem;
+/* ============================================================================
+   FINAL - GARANTIR PRIORIDADE E BOX-SIZING
+   ============================================================================ */
+
+.customization-panel * {
+    box-sizing: border-box !important;
 }
 
-/* Grid Adjustments for Customization */
-.customization-panel .grid {
-    gap: 15px;
+/* Força aplicação em todos os elementos filhos importantes */
+.customization-panel .form-group,
+.customization-panel .customization-control,
+.customization-panel .customization-btn,
+.customization-panel .customization-group,
+.customization-panel .file-input-wrapper,
+.customization-panel .cover-preview {
+    position: relative !important;
+    z-index: 2 !important;
 }
 
-.customization-panel .grid-2 {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-}
-
-.customization-panel .grid-3 {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    .customization-panel {
-        padding: 20px;
-    }
-    
-    .customization-group {
-        padding: 20px;
-        margin: 20px 0;
-    }
-    
-    .customization-controls {
-        flex-direction: column;
-    }
-    
-    .customization-controls .btn {
-        width: 100%;
-        margin-bottom: 10px;
-    }
-    
-    .section-customizer-header {
-        padding: 12px 15px;
-    }
-    
-    .section-customizer-content {
-        padding: 15px;
-    }
-    
-    .sections-customizer {
-        max-height: 300px;
-    }
-    
-    .cover-preview {
-        min-height: 150px !important;
-    }
-    
-    .customization-panel .grid-2,
-    .customization-panel .grid-3 {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Dark Mode Adjustments */
-@media (prefers-color-scheme: dark) {
-    .customization-panel {
-        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
-    }
-    
-    .customization-group {
-        background: rgba(0,0,0,0.2);
-        border-color: rgba(255,255,255,0.1);
-    }
-}
-
-/* Animation for Panel Entrance */
+/* Override para garantir que os estilos sempre sejam aplicados */
 .customization-panel {
-    animation: slideInFromTop 0.6s ease-out;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: white !important;
 }
 
-@keyframes slideInFromTop {
-    from {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* Custom Scrollbar for Better UX */
-.customization-panel {
-    scrollbar-width: thin;
-    scrollbar-color: rgba(255,255,255,0.3) transparent;
-}
-
-/* Focus States for Accessibility */
-.customization-panel .btn:focus,
-.customization-panel .form-control:focus,
-.customization-panel .file-input-wrapper:focus-within {
-    outline: 2px solid rgba(255,255,255,0.8);
-    outline-offset: 2px;
-}
-
-/* Success State for Applied Customizations */
-.section.customization-applied {
-    box-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
-    border-left: 4px solid #2ecc71;
-}
-
-/* Warning State for Missing Customizations */
-.section.customization-warning {
-    box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
-    border-left: 4px solid #f1c40f;
-}
+/* ============================================================================
+   FIM DO ARQUIVO
+   ============================================================================ */

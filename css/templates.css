@@ -488,3 +488,7 @@
         display: none !important;
     }
 }
+
+#template-selector-section {
+  display: none;
+}

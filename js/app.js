@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Criar toggle para painel de customização
     createCustomizationToggle();
-    
+
+    // Criar toggle para templates
+    createTemplateToggle();
+
     BrandManualUtils.devLog('Manual da Marca inicializado com sucesso!');
     
     // Mostrar mensagem de boas-vindas se for primeira visita
@@ -670,6 +673,61 @@ function showWelcomeMessage() {
         }, 1000);
     }
 }
+/**
+ * Criar toggle switch para painel de templates
+ */
+function createTemplateToggle() {
+    const controls = document.querySelector('.controls');
+    if (!controls) return;
+
+    const toggleContainer = document.createElement('div');
+    toggleContainer.className = 'template-toggle-container';
+    toggleContainer.innerHTML = `
+        <label class="switch-label">
+            <span class="switch-text">📑 Templates</span>
+            <label class="switch">
+                <input type="checkbox" id="templateToggle" onchange="handleTemplateToggle(this.checked)">
+                <span class="slider"></span>
+            </label>
+        </label>
+    `;
+
+    const firstButton = controls.querySelector('.btn');
+    if (firstButton) {
+        controls.insertBefore(toggleContainer, firstButton);
+    } else {
+        controls.appendChild(toggleContainer);
+    }
+
+    // Restaurar estado salvo
+ if (typeof(Storage) !== "undefined") {
+    const savedState = localStorage.getItem('brandManual_templatePanelVisible');
+    if (savedState === 'true') {
+        document.getElementById('templateToggle').checked = true;
+        showTemplateSection(true);
+ } else {
+    document.getElementById('templateToggle').checked = false; // garante desmarcado
+    showTemplateSection(false); // garante oculto
+}
+}
+
+    BrandManualUtils.devLog('Toggle de templates criado');
+}
+
+function handleTemplateToggle(checked) {
+    showTemplateSection(checked);
+    localStorage.setItem('brandManual_templatePanelVisible', checked);
+    BrandManualUtils.showSuccess(checked ? 'Templates ativados!' : 'Templates ocultos!');
+}
+
+function showTemplateSection(show) {
+    const section = document.getElementById('template-selector-section');
+    if (section) {
+        section.style.display = show ? 'block' : 'none';
+    }
+}
+
+
 
 /**
  * Funções expostas globalmente para compatibilidade
@@ -683,6 +741,8 @@ window.previewManual = BrandManualPreview.previewManual;
 window.exportHTML = BrandManualExport.exportHTML;
 window.exportPDF = BrandManualExport.exportPDF;
 window.handleCustomizationToggle = handleCustomizationToggle;
+window.handleTemplateToggle = handleTemplateToggle;
+
 
 // Tratamento de erros globais
 window.addEventListener('error', function(e) {

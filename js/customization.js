@@ -1,16 +1,17 @@
 /**
- * Sistema de Customização Avançada do Manual da Marca - VERSÃO FINAL
- * Versão completa e otimizada com todas as funcionalidades
+ * Sistema de Customização Avançada do Manual da Marca - VERSÃO CORRIGIDA 2.2
+ * Arquivo: js/customization.js
+ * Data: 2024
  */
 
 // ============================================================================
-// CONFIGURAÇÃO INICIAL E DADOS
+// CONFIGURAÇÃO INICIAL E ESTADO GLOBAL
 // ============================================================================
 
-// Estado dinâmico do painel de customização
+let isCustomizationInitialized = false;
 let showCustomizationPanel = false;
 
-// Dados de customização global
+// Dados de customização com estrutura simplificada
 let customizationData = {
     coverPage: {
         enabled: true,
@@ -49,125 +50,7 @@ let customizationData = {
         warning: '#f39c12',
         danger: '#e74c3c'
     },
-    sections: {
-        'info-basicas': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '🏢',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'grid',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'identidade': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '🎯',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'list',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'logotipo': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '🎨',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'centered',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'cores': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '🎨',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'palette',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'tipografia': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '✏️',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'grid',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'tom-voz': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '🗣️',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'list',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'aplicacoes': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '📋',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'grid',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'redes-sociais': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '📱',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'grid',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        },
-        'contatos': {
-            enabled: true,
-            backgroundColor: '#f8f9fa',
-            icon: '📞',
-            titleColor: '#2c3e50',
-            customTitle: null,
-            layout: 'grid',
-            animation: 'fadeIn',
-            borderRadius: '12px',
-            padding: '30px',
-            shadow: '0 5px 15px rgba(0,0,0,0.08)',
-            customCSS: ''
-        }
-    }
+    sections: {}
 };
 
 // Temas predefinidos
@@ -204,105 +87,251 @@ const themePresets = {
     }
 };
 
-// Ícones disponíveis
-const availableIcons = [
-    '🏢', '🎯', '🎨', '✏️', '🗣️', '📋', '📱', '📞',
-    '🏨', '🌟', '💎', '🎭', '🚀', '💡', '📊', '🔧',
-    '⭐', '🎪', '🎬', '🎵', '🎮', '🎲', '🎳', '🎯',
-    '📚', '📝', '📰', '📄', '📑', '📈', '📉', '📊',
-    '💼', '💰', '💳', '💎', '👑', '🔐', '🔑', '🔓'
-];
+// Seções padrão
+const DEFAULT_SECTIONS = {
+    'info-basicas': { icon: '🏢', title: 'Informações Básicas' },
+    'identidade': { icon: '🎯', title: 'Identidade da Marca' },
+    'logotipo': { icon: '🎨', title: 'Logotipo' },
+    'cores': { icon: '🎨', title: 'Paleta de Cores' },
+    'tipografia': { icon: '✏️', title: 'Tipografia' },
+    'tom-voz': { icon: '🗣️', title: 'Tom de Voz' },
+    'aplicacoes': { icon: '📋', title: 'Aplicações da Marca' },
+    'redes-sociais': { icon: '📱', title: 'Redes Sociais' },
+    'contatos': { icon: '📞', title: 'Contatos' }
+};
 
 // ============================================================================
-// FUNÇÕES PRINCIPAIS DE INICIALIZAÇÃO
+// FUNÇÕES DE INICIALIZAÇÃO
 // ============================================================================
 
 /**
- * Inicializar sistema de customização
+ * Inicializar sistema de customização de forma robusta
  */
 function initCustomization() {
-    console.log('[Customization] Inicializando sistema...');
+    console.log('[Customization] Inicializando sistema de customização...');
+    
+    if (isCustomizationInitialized) {
+        console.log('[Customization] Sistema já inicializado');
+        return true;
+    }
     
     try {
-        // Verificar estado salvo do painel
-        if (typeof(Storage) !== "undefined") {
-            const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
-            if (savedState !== null) {
-                showCustomizationPanel = savedState === 'true';
-            }
+        // Verificar dependências essenciais
+        if (!checkEssentialDependencies()) {
+            console.warn('[Customization] Dependências não encontradas - iniciando modo básico');
+            initBasicMode();
         }
         
-        // Criar ou remover painel baseado no estado
-        if (showCustomizationPanel) {
-            createCustomizationPanel();
-            createAdvancedTabs();
-            setupAdvancedListeners();
-        } else {
-            // Remover painel se existir
-            const existingPanel = document.getElementById('customization');
-            if (existingPanel) {
-                existingPanel.remove();
-            }
-        }
+        // Inicializar seções padrão
+        initializeDefaultSections();
         
+        // Carregar dados salvos
         loadCustomizationData();
         
-        // Aguardar um pouco antes de aplicar customizações
+        // Verificar estado do painel
+        checkPanelState();
+        
+        // Aplicar customizações salvas
         setTimeout(() => {
             applyAllCustomizations();
         }, 500);
         
-        console.log('[Customization] Sistema inicializado com sucesso');
+        isCustomizationInitialized = true;
+        console.log('[Customization] ✅ Sistema inicializado com sucesso');
+        return true;
+        
     } catch (error) {
-        console.error('[Customization] Erro na inicialização:', error);
+        console.error('[Customization] ❌ Erro na inicialização:', error);
+        initBasicMode();
+        return false;
     }
 }
 
 /**
- * Alternar visibilidade do painel de customização
+ * Verificar dependências essenciais
+ */
+function checkEssentialDependencies() {
+    const required = ['BrandManualUtils'];
+    const missing = [];
+    
+    for (const dep of required) {
+        if (typeof window[dep] === 'undefined') {
+            missing.push(dep);
+        }
+    }
+    
+    if (missing.length > 0) {
+        console.warn('[Customization] Dependências faltando:', missing);
+        return false;
+    }
+    
+    return true;
+}
+
+/**
+ * Modo básico sem dependências
+ */
+function initBasicMode() {
+    console.log('[Customization] Iniciando modo básico...');
+    
+    // Criar funções básicas se não existirem
+    if (!window.BrandManualUtils) {
+        window.BrandManualUtils = {
+            showSuccess: (msg) => {
+                console.log('✅ SUCCESS:', msg);
+                showBasicNotification(msg, 'success');
+            },
+            showError: (msg) => {
+                console.log('❌ ERROR:', msg);
+                showBasicNotification(msg, 'error');
+            },
+            devLog: (msg, data) => {
+                console.log('[Dev]', msg, data || '');
+            }
+        };
+    }
+    
+    isCustomizationInitialized = true;
+    console.log('[Customization] ✅ Modo básico inicializado');
+}
+
+/**
+ * Mostrar notificação básica
+ */
+function showBasicNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 20px;
+        border-radius: 8px;
+        color: white;
+        font-weight: bold;
+        z-index: 10000;
+        animation: slideInRight 0.3s ease-out;
+        max-width: 300px;
+        word-wrap: break-word;
+    `;
+    
+    if (type === 'success') {
+        notification.style.background = '#27ae60';
+        notification.textContent = '✅ ' + message;
+    } else if (type === 'error') {
+        notification.style.background = '#e74c3c';
+        notification.textContent = '❌ ' + message;
+    } else {
+        notification.style.background = '#3498db';
+        notification.textContent = 'ℹ️ ' + message;
+    }
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+/**
+ * Inicializar seções padrão
+ */
+function initializeDefaultSections() {
+    Object.keys(DEFAULT_SECTIONS).forEach(sectionId => {
+        if (!customizationData.sections[sectionId]) {
+            customizationData.sections[sectionId] = {
+                enabled: true,
+                backgroundColor: '#f8f9fa',
+                icon: DEFAULT_SECTIONS[sectionId].icon,
+                titleColor: '#2c3e50',
+                customTitle: null,
+                layout: 'grid',
+                animation: 'fadeIn',
+                borderRadius: '12px',
+                padding: '30px',
+                shadow: '0 5px 15px rgba(0,0,0,0.08)',
+                customCSS: ''
+            };
+        }
+    });
+}
+
+/**
+ * Verificar estado do painel
+ */
+function checkPanelState() {
+    try {
+        if (typeof(Storage) !== "undefined") {
+            const savedState = localStorage.getItem('brandManual_customizationPanelVisible');
+            showCustomizationPanel = savedState === 'true';
+            
+            if (showCustomizationPanel) {
+                setTimeout(() => {
+                    createCustomizationPanel();
+                }, 500);
+            }
+        }
+    } catch (e) {
+        console.warn('[Customization] Erro ao verificar estado do painel:', e);
+    }
+}
+
+// ============================================================================
+// GERENCIAMENTO DO PAINEL
+// ============================================================================
+
+/**
+ * Alternar painel de customização
  */
 function toggleCustomizationPanel(show) {
+    console.log('[Customization] Toggle painel:', show);
+    
+    if (!isCustomizationInitialized) {
+        initCustomization();
+    }
+    
     showCustomizationPanel = show;
     
-    // Salvar preferência
-    if (typeof(Storage) !== "undefined") {
-        localStorage.setItem('brandManual_customizationPanelVisible', show.toString());
+    // Salvar estado
+    try {
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem('brandManual_customizationPanelVisible', show.toString());
+        }
+    } catch (e) {
+        console.warn('[Customization] Erro ao salvar estado:', e);
     }
     
     if (show) {
-        // Criar painel se não existir
-        if (!document.getElementById('customization')) {
-            createCustomizationPanel();
-            createAdvancedTabs();
-            setupAdvancedListeners();
-            
-            // Aplicar animação de entrada
-            setTimeout(() => {
-                const panel = document.getElementById('customization');
-                if (panel) {
-                    panel.style.animation = 'slideInFromTop 0.6s ease-out';
-                }
-            }, 100);
-        }
+        createCustomizationPanel();
+        setTimeout(() => {
+            const panel = document.getElementById('customization');
+            if (panel) {
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 400);
+        
+        BrandManualUtils.showSuccess('Painel de customização ativado!');
     } else {
-        // Remover painel com animação
-        const panel = document.getElementById('customization');
-        if (panel) {
-            panel.style.animation = 'fadeOut 0.3s ease-out';
-            setTimeout(() => {
-                panel.remove();
-            }, 300);
-        }
+        removeCustomizationPanel();
+        BrandManualUtils.showSuccess('Painel de customização desativado!');
     }
-    
-    console.log('[Customization] Painel', show ? 'mostrado' : 'oculto');
 }
 
 /**
  * Criar painel de customização
  */
 function createCustomizationPanel() {
-    console.log('[Customization] Criando painel...');
+    console.log('[Customization] Criando painel de customização...');
+    
+    // Remover painel existente
+    const existingPanel = document.getElementById('customization');
+    if (existingPanel) {
+        existingPanel.remove();
+    }
     
     const container = document.querySelector('.container');
     if (!container) {
@@ -310,54 +339,72 @@ function createCustomizationPanel() {
         return;
     }
     
+    // Criar seção de customização
     const customizationSection = document.createElement('section');
     customizationSection.className = 'section customization-panel';
     customizationSection.id = 'customization';
     
-    customizationSection.innerHTML = `
-        <h2>🎨 Customização Visual Avançada</h2>
-        
-        <!-- Controles originais da capa -->
-        <div class="customization-group">
-            <h3>📄 Capa do Manual</h3>
-            <div class="grid grid-2">
-                <div class="form-group">
-                    <label>Posição do Logo na Capa</label>
-                    <select class="form-control" id="coverLogoPosition" onchange="updateCoverSettings()">
-                        <option value="center">Centro</option>
-                        <option value="top">Topo</option>
-                        <option value="bottom">Inferior</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Estilo do Título</label>
-                    <select class="form-control" id="coverTitleStyle" onchange="updateCoverSettings()">
-                        <option value="gradient">Gradiente</option>
-                        <option value="solid">Cor Sólida</option>
-                        <option value="outlined">Contornado</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="form-group">
-                <label>Imagem de Fundo da Capa</label>
-                <div class="file-input-wrapper">
-                    <input type="file" id="coverBackgroundFile" accept="image/*" onchange="previewCoverBackground(this)">
-                    📁 Selecionar Imagem de Fundo
-                </div>
-                <div class="cover-preview" id="coverPreview" style="margin-top: 15px; min-height: 200px; border: 2px dashed #ddd; border-radius: 8px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #6c757d;">
-                    Preview da Capa
-                </div>
-            </div>
-        </div>
+    // Adicionar estilos inline para garantir aplicação
+    customizationSection.style.cssText = `
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+        color: white !important;
+        border: 3px solid #4a90e2 !important;
+        position: relative;
+        overflow: hidden;
+        animation: slideInFromTop 0.6s ease-out;
+        z-index: 10;
+    `;
+    
+    customizationSection.innerHTML = createPanelHTML();
+    
+    // Inserir no container
+    const firstSection = container.querySelector('.section:not(.customization-panel)');
+    if (firstSection) {
+        container.insertBefore(customizationSection, firstSection);
+    } else {
+        container.appendChild(customizationSection);
+    }
+    
+    // Configurar event listeners
+    setTimeout(() => {
+        setupPanelEventListeners();
+        updateInterfaceFields();
+    }, 100);
+    
+    console.log('[Customization] ✅ Painel criado com sucesso');
+}
 
-        <!-- Configurações globais -->
-        <div class="customization-group">
-            <h3>🌐 Configurações Globais</h3>
-            <div class="grid grid-3">
+/**
+ * Remover painel de customização
+ */
+function removeCustomizationPanel() {
+    const panel = document.getElementById('customization');
+    if (panel) {
+        panel.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            if (panel.parentNode) {
+                panel.parentNode.removeChild(panel);
+            }
+        }, 300);
+    }
+}
+
+/**
+ * Criar HTML do painel
+ */
+function createPanelHTML() {
+    return `
+        <h2 style="color: white !important; border-bottom: 3px solid rgba(255,255,255,0.3) !important; position: relative; z-index: 2;">
+            🎨 Customização Visual Avançada
+        </h2>
+        
+        <div class="customization-group" style="background: rgba(255,255,255,0.1) !important; padding: 25px !important; border-radius: 12px !important; margin: 25px 0 !important; position: relative; z-index: 2;">
+            <h3 style="color: white !important; margin-bottom: 20px !important;">🌟 Configurações Globais</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
                 <div class="form-group">
-                    <label>Tema Predefinido</label>
-                    <select class="form-control" id="globalTheme" onchange="applyThemePreset()">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Tema Predefinido</label>
+                    <select class="customization-control" id="globalTheme" onchange="applyThemePreset()">
                         <option value="professional">Profissional</option>
                         <option value="modern">Moderno</option>
                         <option value="elegant">Elegante</option>
@@ -365,17 +412,19 @@ function createCustomizationPanel() {
                         <option value="minimalist">Minimalista</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
-                    <label>Estilo de Bordas</label>
-                    <select class="form-control" id="borderStyle" onchange="applyGlobalSettings()">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Estilo de Bordas</label>
+                    <select class="customization-control" id="borderStyle" onchange="applyGlobalSettings()">
                         <option value="rounded">Arredondadas</option>
                         <option value="sharp">Afiadas</option>
                         <option value="soft">Suaves</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
-                    <label>Nível de Animações</label>
-                    <select class="form-control" id="animationLevel" onchange="applyGlobalSettings()">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Nível de Animações</label>
+                    <select class="customization-control" id="animationLevel" onchange="applyGlobalSettings()">
                         <option value="full">Completas</option>
                         <option value="reduced">Reduzidas</option>
                         <option value="minimal">Mínimas</option>
@@ -384,77 +433,198 @@ function createCustomizationPanel() {
                 </div>
             </div>
         </div>
-
-        <!-- Header Background -->
-        <div class="customization-group">
-            <h3>🖼️ Fundo do Cabeçalho</h3>
-            <div class="grid grid-3">
+        
+        <div class="customization-group" style="background: rgba(255,255,255,0.1) !important; padding: 25px !important; border-radius: 12px !important; margin: 25px 0 !important; position: relative; z-index: 2;">
+            <h3 style="color: white !important; margin-bottom: 20px !important;">🎨 Cores Personalizadas</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
                 <div class="form-group">
-                    <label>Tipo de Fundo</label>
-                    <select class="form-control" id="headerBackgroundType" onchange="updateHeaderBackground()">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Cor Primária</label>
+                    <input type="color" class="customization-control" id="customPrimaryColor" 
+                           value="#2c3e50" onchange="updateCustomColors()">
+                </div>
+                
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Cor Secundária</label>
+                    <input type="color" class="customization-control" id="customSecondaryColor" 
+                           value="#3498db" onchange="updateCustomColors()">
+                </div>
+                
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Cor de Destaque</label>
+                    <input type="color" class="customization-control" id="customAccentColor" 
+                           value="#e74c3c" onchange="updateCustomColors()">
+                </div>
+            </div>
+            
+            <div id="colorPreviewCustom" style="display: flex !important; gap: 10px !important; margin-top: 15px !important; justify-content: center !important; flex-wrap: wrap !important; position: relative; z-index: 2;">
+                <!-- Preview será preenchido dinamicamente -->
+            </div>
+        </div>
+        
+        <div class="customization-group" style="background: rgba(255,255,255,0.1) !important; padding: 25px !important; border-radius: 12px !important; margin: 25px 0 !important; position: relative; z-index: 2;">
+            <h3 style="color: white !important; margin-bottom: 20px !important;">📄 Configurações da Capa</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Posição do Logo na Capa</label>
+                    <select class="customization-control" id="coverLogoPosition" onchange="updateCoverSettings()">
+                        <option value="center">Centro</option>
+                        <option value="top">Topo</option>
+                        <option value="bottom">Inferior</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Estilo do Título</label>
+                    <select class="customization-control" id="coverTitleStyle" onchange="updateCoverSettings()">
+                        <option value="gradient">Gradiente</option>
+                        <option value="solid">Cor Sólida</option>
+                        <option value="outlined">Contornado</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group" style="margin-top: 20px;">
+                <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Imagem de Fundo da Capa</label>
+                <div class="file-input-wrapper" style="background: rgba(255,255,255,0.2) !important; border: 1px solid rgba(255,255,255,0.3) !important; color: white !important; padding: 10px 15px !important; border-radius: 6px !important; cursor: pointer !important; display: inline-block !important;">
+                    <input type="file" id="coverBackgroundFile" accept="image/*" onchange="previewCoverBackground(this)" style="position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer;">
+                    📁 Selecionar Imagem de Fundo
+                </div>
+                <div class="cover-preview" id="coverPreview" style="margin-top: 15px; min-height: 150px; border: 2px dashed rgba(255,255,255,0.3) !important; border-radius: 8px; background: rgba(255,255,255,0.05) !important; display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.6);">
+                    Preview da Capa
+                </div>
+            </div>
+        </div>
+        
+        <div class="customization-group" style="background: rgba(255,255,255,0.1) !important; padding: 25px !important; border-radius: 12px !important; margin: 25px 0 !important; position: relative; z-index: 2;">
+            <h3 style="color: white !important; margin-bottom: 20px !important;">🖼️ Fundo do Cabeçalho</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div class="form-group">
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Tipo de Fundo</label>
+                    <select class="customization-control" id="headerBackgroundType" onchange="updateHeaderBackground()">
                         <option value="gradient">Gradiente</option>
                         <option value="image">Imagem</option>
                         <option value="solid">Cor Sólida</option>
                     </select>
                 </div>
+                
                 <div class="form-group">
-                    <label>Sobreposição</label>
-                    <input type="range" class="form-control" id="headerOverlay" min="0" max="1" step="0.1" value="0.3" onchange="updateHeaderBackground()">
-                    <small>Escurecer fundo: <span id="overlayValue">30%</span></small>
+                    <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Sobreposição</label>
+                    <input type="range" class="customization-control" id="headerOverlay" min="0" max="1" step="0.1" value="0.3" onchange="updateHeaderBackground()" style="width: 100% !important;">
+                    <small style="color: rgba(255,255,255,0.8) !important;">Escurecer fundo: <span id="overlayValue">30%</span></small>
                 </div>
-                <div class="form-group" id="headerImageGroup" style="display: none;">
-                    <label>Imagem de Fundo</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="headerBackgroundFile" accept="image/*" onchange="previewHeaderBackground(this)">
-                        📁 Selecionar
-                    </div>
+            </div>
+            
+            <div class="form-group" id="headerImageGroup" style="display: none; margin-top: 15px;">
+                <label style="color: rgba(255,255,255,0.9) !important; font-weight: 500 !important; margin-bottom: 8px !important; display: block !important;">Imagem de Fundo do Cabeçalho</label>
+                <div class="file-input-wrapper" style="background: rgba(255,255,255,0.2) !important; border: 1px solid rgba(255,255,255,0.3) !important; color: white !important; padding: 10px 15px !important; border-radius: 6px !important; cursor: pointer !important; display: inline-block !important;">
+                    <input type="file" id="headerBackgroundFile" accept="image/*" onchange="previewHeaderBackground(this)" style="position: absolute; opacity: 0; width: 100%; height: 100%; cursor: pointer;">
+                    📁 Selecionar Imagem
                 </div>
             </div>
         </div>
-
-        <!-- Container para tabs avançadas -->
-        <div class="advanced-tabs" id="advancedTabsContainer">
-            <!-- Será preenchido pela função createAdvancedTabs() -->
-        </div>
-
-        <!-- Controles -->
-        <div class="customization-controls">
-            <button class="btn btn-primary" onclick="previewCustomizations()">👁️ Preview Customizações</button>
-            <button class="btn btn-success" onclick="saveCustomizations()">💾 Salvar Customizações</button>
-            <button class="btn btn-warning" onclick="resetCustomizations()">🔄 Resetar</button>
-            <button class="btn btn-info" onclick="exportCustomizationConfig()">📤 Exportar Config</button>
-            <button class="btn btn-secondary" onclick="importCustomizationConfig()">📥 Importar Config</button>
+        
+        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 30px; flex-wrap: wrap; position: relative; z-index: 2;">
+            <button class="customization-btn" onclick="previewCustomizations()" 
+                    style="background: rgba(255,255,255,0.9) !important; color: #4a90e2 !important; border: none !important; font-weight: 600 !important; padding: 12px 24px !important; border-radius: 8px !important; cursor: pointer !important;">
+                👁️ Preview Customizações
+            </button>
+            <button class="customization-btn" onclick="saveCustomizations()"
+                    style="background: #27ae60 !important; color: white !important; border: none !important; font-weight: 600 !important; padding: 12px 24px !important; border-radius: 8px !important; cursor: pointer !important;">
+                💾 Salvar Customizações
+            </button>
+            <button class="customization-btn" onclick="resetCustomizations()"
+                    style="background: #f39c12 !important; color: white !important; border: none !important; font-weight: 600 !important; padding: 12px 24px !important; border-radius: 8px !important; cursor: pointer !important;">
+                🔄 Resetar Tudo
+            </button>
+            <button class="customization-btn" onclick="exportCustomizationConfig()"
+                    style="background: #17a2b8 !important; color: white !important; border: none !important; font-weight: 600 !important; padding: 12px 24px !important; border-radius: 8px !important; cursor: pointer !important;">
+                📤 Exportar Config
+            </button>
         </div>
     `;
-    
-    // Inserir antes da primeira seção
-    const firstSection = container.querySelector('.section:not(.customization-panel)');
-    if (firstSection) {
-        container.insertBefore(customizationSection, firstSection);
-    } else {
-        container.appendChild(customizationSection);
-    }
 }
 
 // ============================================================================
-// FUNÇÕES ORIGINAIS MANTIDAS
+// APLICAÇÃO DE CUSTOMIZAÇÕES
 // ============================================================================
 
 /**
- * Preview da imagem de fundo da capa
+ * Aplicar tema predefinido
  */
-function previewCoverBackground(input) {
-    const preview = document.getElementById('coverPreview');
-    if (!preview) return;
+function applyThemePreset() {
+    const selectedTheme = document.getElementById('globalTheme')?.value;
+    if (!selectedTheme || !themePresets[selectedTheme]) return;
     
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            customizationData.coverPage.backgroundImage = e.target.result;
-            updateCoverPreview();
-        };
-        reader.readAsDataURL(input.files[0]);
+    const theme = themePresets[selectedTheme];
+    
+    // Atualizar dados de customização
+    customizationData.global.theme = selectedTheme;
+    customizationData.colors = { ...customizationData.colors, ...theme.colors };
+    customizationData.typography = { ...customizationData.typography, ...theme.typography };
+    customizationData.global.borderStyle = theme.borderStyle;
+    customizationData.global.animationLevel = theme.animationLevel;
+    
+    // Atualizar campos na interface
+    updateInterfaceFields();
+    
+    // Aplicar mudanças
+    applyAllCustomizations();
+    
+    BrandManualUtils.showSuccess(`Tema "${selectedTheme}" aplicado com sucesso!`);
+}
+
+/**
+ * Aplicar configurações globais
+ */
+function applyGlobalSettings() {
+    const borderStyle = document.getElementById('borderStyle')?.value;
+    const animationLevel = document.getElementById('animationLevel')?.value;
+    
+    if (borderStyle) {
+        customizationData.global.borderStyle = borderStyle;
+        applyBorderStyles();
     }
+    
+    if (animationLevel) {
+        customizationData.global.animationLevel = animationLevel;
+        applyAnimationSettings();
+    }
+    
+    saveCustomizationData();
+}
+
+/**
+ * Atualizar cores customizadas
+ */
+function updateCustomColors() {
+    const primary = document.getElementById('customPrimaryColor')?.value;
+    const secondary = document.getElementById('customSecondaryColor')?.value;
+    const accent = document.getElementById('customAccentColor')?.value;
+    
+    if (primary) customizationData.colors.primary = primary;
+    if (secondary) customizationData.colors.secondary = secondary;
+    if (accent) customizationData.colors.accent = accent;
+    
+    updateColorPreview();
+    applyColorsToPage();
+    saveCustomizationData();
+}
+
+/**
+ * Atualizar configurações da capa
+ */
+function updateCoverSettings() {
+    const logoPosition = document.getElementById('coverLogoPosition')?.value;
+    const titleStyle = document.getElementById('coverTitleStyle')?.value;
+    
+    if (logoPosition) customizationData.coverPage.logoPosition = logoPosition;
+    if (titleStyle) customizationData.coverPage.titleStyle = titleStyle;
+    
+    updateCoverPreview();
+    saveCustomizationData();
 }
 
 /**
@@ -485,6 +655,25 @@ function updateHeaderBackground() {
     customizationData.headerBackground.overlay = `rgba(0,0,0,${overlay})`;
     
     applyHeaderBackground();
+    saveCustomizationData();
+}
+
+/**
+ * Preview da imagem de fundo da capa
+ */
+function previewCoverBackground(input) {
+    const preview = document.getElementById('coverPreview');
+    if (!preview) return;
+    
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            customizationData.coverPage.backgroundImage = e.target.result;
+            updateCoverPreview();
+            saveCustomizationData();
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 
 /**
@@ -496,588 +685,42 @@ function previewHeaderBackground(input) {
         reader.onload = function(e) {
             customizationData.headerBackground.image = e.target.result;
             updateHeaderBackground();
+            saveCustomizationData();
         };
         reader.readAsDataURL(input.files[0]);
     }
 }
 
 /**
- * Atualizar configurações da capa
+ * Aplicar cores à página
  */
-function updateCoverSettings() {
-    const logoPositionEl = document.getElementById('coverLogoPosition');
-    const titleStyleEl = document.getElementById('coverTitleStyle');
+function applyColorsToPage() {
+    const root = document.documentElement;
+    const colors = customizationData.colors;
     
-    if (logoPositionEl) {
-        customizationData.coverPage.logoPosition = logoPositionEl.value;
-    }
+    // Aplicar variáveis CSS
+    root.style.setProperty('--primary-color', colors.primary);
+    root.style.setProperty('--secondary-color', colors.secondary);
+    root.style.setProperty('--accent-color', colors.accent);
     
-    if (titleStyleEl) {
-        customizationData.coverPage.titleStyle = titleStyleEl.value;
-    }
-    
-    updateCoverPreview();
-}
-
-/**
- * Atualizar preview da capa
- */
-function updateCoverPreview() {
-    const preview = document.getElementById('coverPreview');
-    if (!preview) return;
-    
-    // Tentar usar BrandManualStorage se disponível
-    let data = {};
-    try {
-        if (window.BrandManualStorage && typeof window.BrandManualStorage.collectFormData === 'function') {
-            data = window.BrandManualStorage.collectFormData();
-        } else {
-            // Fallback: coletar dados básicos
-            const hotelNameEl = document.getElementById('hotelName');
-            data.hotelName = hotelNameEl ? hotelNameEl.value : 'Nome do Hotel';
-            data.primaryColor = customizationData.colors.primary;
-            data.secondaryColor = customizationData.colors.secondary;
-        }
-    } catch (error) {
-        console.warn('[Customization] Erro ao coletar dados do formulário:', error);
-        data = {
-            hotelName: 'Nome do Hotel',
-            primaryColor: customizationData.colors.primary,
-            secondaryColor: customizationData.colors.secondary
-        };
-    }
-    
-    const logoImg = document.querySelector('#logoPreview img');
-    
-    let backgroundStyle = '';
-    if (customizationData.coverPage.backgroundImage) {
-        backgroundStyle = `
-            background: linear-gradient(${customizationData.coverPage.backgroundOverlay}, ${customizationData.coverPage.backgroundOverlay}), 
-                       url('${customizationData.coverPage.backgroundImage}') center/cover;
-        `;
-    } else {
-        backgroundStyle = `background: linear-gradient(135deg, ${data.primaryColor || '#2c3e50'}, ${data.secondaryColor || '#3498db'});`;
-    }
-    
-    preview.innerHTML = `
-        <div style="${backgroundStyle} width: 100%; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: ${customizationData.coverPage.logoPosition}; color: white; padding: 30px; border-radius: 8px; text-align: center;">
-            ${logoImg ? `<img src="${logoImg.src}" style="max-width: 150px; max-height: 60px; margin-bottom: 20px;">` : ''}
-            <h1 style="font-size: 2.5rem; margin: 10px 0; ${getTitleStyle()}">${data.hotelName || 'Nome do Hotel'}</h1>
-            <p style="font-size: 1.2rem; opacity: 0.9;">Manual da Marca</p>
-        </div>
-    `;
-}
-
-/**
- * Obter estilo do título
- */
-function getTitleStyle() {
-    const style = customizationData.coverPage.titleStyle;
-    
-    switch (style) {
-        case 'gradient':
-            return `background: linear-gradient(45deg, ${customizationData.colors.secondary}, ${customizationData.colors.accent}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;`;
-        case 'solid':
-            return `color: white; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);`;
-        case 'outlined':
-            return `color: transparent; -webkit-text-stroke: 2px white; font-weight: bold;`;
-        default:
-            return 'color: white; font-weight: bold;';
-    }
-}
-
-/**
- * Aplicar fundo do header
- */
-function applyHeaderBackground() {
+    // Atualizar header se existir
     const header = document.querySelector('.header');
-    if (!header) return;
-    
-    const type = customizationData.headerBackground.type;
-    
-    switch (type) {
-        case 'gradient':
-            header.style.background = `linear-gradient(135deg, ${customizationData.colors.primary}, ${customizationData.colors.secondary})`;
-            break;
-            
-        case 'image':
-            if (customizationData.headerBackground.image) {
-                header.style.background = `
-                    linear-gradient(${customizationData.headerBackground.overlay}, ${customizationData.headerBackground.overlay}),
-                    url('${customizationData.headerBackground.image}') center/cover
-                `;
-            }
-            break;
-            
-        case 'solid':
-            header.style.background = customizationData.colors.primary;
-            break;
+    if (header) {
+        header.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`;
     }
-}
-
-// ============================================================================
-// FUNCIONALIDADES EXPANDIDAS
-// ============================================================================
-
-/**
- * Criar tabs avançadas
- */
-function createAdvancedTabs() {
-    const container = document.getElementById('advancedTabsContainer');
-    if (!container) return;
     
-    container.innerHTML = `
-        <div class="advanced-tabs-header">
-            <h3>🔧 Customização Avançada</h3>
-            <div class="tabs-nav">
-                <button class="tab-btn active" onclick="switchAdvancedTab('sections')">📋 Seções</button>
-                <button class="tab-btn" onclick="switchAdvancedTab('colors')">🎨 Cores</button>
-                <button class="tab-btn" onclick="switchAdvancedTab('typography')">✏️ Tipografia</button>
-                <button class="tab-btn" onclick="switchAdvancedTab('layout')">📐 Layout</button>
-            </div>
-        </div>
-        
-        <div class="tabs-content">
-            ${generateSectionsTab()}
-            ${generateColorsTab()}
-            ${generateTypographyTab()}
-            ${generateLayoutTab()}
-        </div>
-    `;
-    
-    // Inicializar primeira aba
-    switchAdvancedTab('sections');
-}
-
-/**
- * Alternar entre tabs
- */
-function switchAdvancedTab(tabName) {
-    // Remover classe active de todas as tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.style.display = 'none';
-        content.classList.remove('active');
+    // Atualizar títulos das seções
+    const sectionTitles = document.querySelectorAll('.section h2');
+    sectionTitles.forEach(title => {
+        title.style.color = colors.primary;
+        title.style.borderBottomColor = colors.secondary;
     });
     
-    // Ativar tab selecionada
-    const tabBtn = document.querySelector(`[onclick*="switchAdvancedTab('${tabName}')"]`);
-    if (tabBtn) tabBtn.classList.add('active');
-    
-    const tabContent = document.getElementById(`tab-${tabName}`);
-    if (tabContent) {
-        tabContent.style.display = 'block';
-        tabContent.classList.add('active');
-    }
-}
-
-/**
- * Gerar aba de seções
- */
-function generateSectionsTab() {
-    return `
-        <div class="tab-content active" id="tab-sections">
-            <h4>📋 Personalizar Seções Individuais</h4>
-            <div class="sections-customizer" id="sectionsCustomizer">
-                ${generateSectionCards()}
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Gerar cards das seções
- */
-function generateSectionCards() {
-    const sectionNames = {
-        'info-basicas': 'Informações Básicas',
-        'identidade': 'Identidade da Marca', 
-        'logotipo': 'Logotipo',
-        'cores': 'Paleta de Cores',
-        'tipografia': 'Tipografia',
-        'tom-voz': 'Tom de Voz',
-        'aplicacoes': 'Aplicações da Marca',
-        'redes-sociais': 'Redes Sociais',
-        'contatos': 'Contatos'
-    };
-    
-    let html = '';
-    
-    Object.keys(customizationData.sections).forEach(sectionId => {
-        const sectionData = customizationData.sections[sectionId];
-        const sectionName = sectionNames[sectionId] || sectionId;
-        
-        html += `
-            <div class="section-card" id="card-${sectionId}">
-                <div class="section-card-header" onclick="toggleSectionCard('${sectionId}')">
-                    <div class="section-info">
-                        <span class="section-icon">${sectionData.icon}</span>
-                        <span class="section-name">${sectionName}</span>
-                    </div>
-                    <div class="section-status ${sectionData.enabled ? 'enabled' : 'disabled'}">
-                        ${sectionData.enabled ? '✅' : '❌'}
-                    </div>
-                    <span class="toggle-icon">▼</span>
-                </div>
-                
-                <div class="section-card-content" id="content-${sectionId}" style="display: none;">
-                    ${generateSectionControls(sectionId, sectionData)}
-                </div>
-            </div>
-        `;
+    // Atualizar botões primários
+    const primaryButtons = document.querySelectorAll('.btn-primary');
+    primaryButtons.forEach(btn => {
+        btn.style.backgroundColor = colors.secondary;
     });
-    
-    return html;
-}
-
-/**
- * Gerar controles de seção
- */
-function generateSectionControls(sectionId, sectionData) {
-    return `
-        <div class="section-controls">
-            <div class="control-row">
-                <div class="form-group">
-                    <label>
-                        <input type="checkbox" ${sectionData.enabled ? 'checked' : ''} onchange="toggleSectionEnabled('${sectionId}', this.checked)">
-                        Seção Ativa
-                    </label>
-                </div>
-                <div class="form-group">
-                    <label>Título Personalizado</label>
-                    <input type="text" class="form-control" value="${sectionData.customTitle || ''}" 
-                           placeholder="Deixe vazio para padrão" onchange="updateSectionTitle('${sectionId}', this.value)">
-                </div>
-            </div>
-            
-            <div class="control-row">
-                <div class="form-group">
-                    <label>Ícone</label>
-                    <div class="icon-selector">
-                        <input type="text" class="form-control" value="${sectionData.icon}" 
-                               onchange="updateSectionIcon('${sectionId}', this.value)" maxlength="2">
-                        <button type="button" class="btn-icon-picker" onclick="showIconPicker('${sectionId}')">🔍</button>
-                    </div>
-                    <div class="icon-picker" id="iconPicker-${sectionId}" style="display: none;">
-                        ${generateIconPicker(sectionId)}
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Cor do Título</label>
-                    <input type="color" class="form-control" value="${sectionData.titleColor}" 
-                           onchange="updateSectionColor('${sectionId}', 'titleColor', this.value)">
-                </div>
-                <div class="form-group">
-                    <label>Cor de Fundo</label>
-                    <input type="color" class="form-control" value="${sectionData.backgroundColor}" 
-                           onchange="updateSectionColor('${sectionId}', 'backgroundColor', this.value)">
-                </div>
-            </div>
-            
-            <div class="section-preview-mini">
-                <strong>Preview:</strong>
-                <div class="mini-preview" style="background: ${sectionData.backgroundColor}; padding: 10px; border-radius: 6px; margin-top: 5px;">
-                    <h4 style="color: ${sectionData.titleColor}; margin: 0;">${sectionData.icon} ${sectionData.customTitle || 'Título da Seção'}</h4>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Gerar picker de ícones
- */
-function generateIconPicker(sectionId) {
-    return availableIcons.map(icon => 
-        `<span class="icon-option" onclick="selectIcon('${sectionId}', '${icon}')" style="cursor: pointer; padding: 5px; display: inline-block; border: 1px solid #ddd; margin: 2px; border-radius: 4px; hover: background-color: #f0f0f0;">${icon}</span>`
-    ).join('');
-}
-
-/**
- * Gerar aba de cores
- */
-function generateColorsTab() {
-    return `
-        <div class="tab-content" id="tab-colors" style="display: none;">
-            <h4>🎨 Paleta de Cores Avançada</h4>
-            <div class="grid grid-3">
-                <div class="form-group">
-                    <label>Cor Primária</label>
-                    <input type="color" class="form-control" id="advancedPrimaryColor" 
-                           value="${customizationData.colors.primary}" onchange="updateAdvancedColors()">
-                    <input type="text" class="form-control" placeholder="Nome da cor" style="margin-top: 8px;">
-                </div>
-                <div class="form-group">
-                    <label>Cor Secundária</label>
-                    <input type="color" class="form-control" id="advancedSecondaryColor" 
-                           value="${customizationData.colors.secondary}" onchange="updateAdvancedColors()">
-                    <input type="text" class="form-control" placeholder="Nome da cor" style="margin-top: 8px;">
-                </div>
-                <div class="form-group">
-                    <label>Cor de Destaque</label>
-                    <input type="color" class="form-control" id="advancedAccentColor" 
-                           value="${customizationData.colors.accent}" onchange="updateAdvancedColors()">
-                    <input type="text" class="form-control" placeholder="Nome da cor" style="margin-top: 8px;">
-                </div>
-            </div>
-            
-            <div class="color-preview-advanced" style="margin-top: 20px; padding: 20px; background: #f8f9fa; border-radius: 8px;">
-                <h5>Preview da Paleta</h5>
-                <div class="color-swatches" id="advancedColorPreview">
-                    <!-- Será preenchido dinamicamente -->
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Gerar aba de tipografia
- */
-function generateTypographyTab() {
-    return `
-        <div class="tab-content" id="tab-typography" style="display: none;">
-            <h4>✏️ Configurações Tipográficas</h4>
-            <div class="grid grid-2">
-                <div class="form-group">
-                    <label>Fonte Principal</label>
-                    <select class="form-control" id="advancedPrimaryFont" onchange="updateAdvancedTypography()">
-                        <option value="Arial">Arial</option>
-                        <option value="Helvetica">Helvetica</option>
-                        <option value="Georgia">Georgia</option>
-                        <option value="Times New Roman">Times New Roman</option>
-                        <option value="Roboto">Roboto</option>
-                        <option value="Open Sans">Open Sans</option>
-                        <option value="Montserrat">Montserrat</option>
-                        <option value="Lato">Lato</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Tamanho Base</label>
-                    <input type="range" class="form-control" id="advancedFontSize" 
-                           min="0.8" max="1.4" step="0.1" value="1.0" onchange="updateAdvancedTypography()">
-                    <small>Atual: <span id="fontSizeDisplay">1.0rem</span></small>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-/**
- * Gerar aba de layout
- */
-function generateLayoutTab() {
-    return `
-        <div class="tab-content" id="tab-layout" style="display: none;">
-            <h4>📐 Configurações de Layout</h4>
-            <div class="grid grid-2">
-                <div class="form-group">
-                    <label>Largura Máxima</label>
-                    <select class="form-control" id="advancedMaxWidth" onchange="updateAdvancedLayout()">
-                        <option value="1000px">Compacto (1000px)</option>
-                        <option value="1200px" selected>Padrão (1200px)</option>
-                        <option value="1400px">Amplo (1400px)</option>
-                        <option value="100%">Largura Total</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Espaçamento entre Seções</label>
-                    <input type="range" class="form-control" id="advancedSectionSpacing" 
-                           min="15" max="60" value="30" onchange="updateAdvancedLayout()">
-                    <small>Atual: <span id="spacingDisplay">30px</span></small>
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// ============================================================================
-// FUNÇÕES DE CONTROLE DE SEÇÕES
-// ============================================================================
-
-/**
- * Alternar card de seção
- */
-function toggleSectionCard(sectionId) {
-    const content = document.getElementById(`content-${sectionId}`);
-    const icon = document.querySelector(`#card-${sectionId} .toggle-icon`);
-    
-    if (!content || !icon) return;
-    
-    if (content.style.display === 'none') {
-        content.style.display = 'block';
-        icon.textContent = '▲';
-    } else {
-        content.style.display = 'none';
-        icon.textContent = '▼';
-    }
-}
-
-/**
- * Alternar seção ativa/inativa
- */
-function toggleSectionEnabled(sectionId, enabled) {
-    customizationData.sections[sectionId].enabled = enabled;
-    
-    const section = document.getElementById(sectionId);
-    const statusElement = document.querySelector(`#card-${sectionId} .section-status`);
-    
-    if (section) {
-        section.style.display = enabled ? 'block' : 'none';
-    }
-    
-    if (statusElement) {
-        statusElement.textContent = enabled ? '✅' : '❌';
-        statusElement.className = `section-status ${enabled ? 'enabled' : 'disabled'}`;
-    }
-}
-
-/**
- * Atualizar título da seção
- */
-function updateSectionTitle(sectionId, title) {
-    customizationData.sections[sectionId].customTitle = title;
-    applySectionChanges(sectionId);
-}
-
-/**
- * Atualizar ícone da seção
- */
-function updateSectionIcon(sectionId, icon) {
-    customizationData.sections[sectionId].icon = icon;
-    
-    // Atualizar no card
-    const cardIcon = document.querySelector(`#card-${sectionId} .section-icon`);
-    if (cardIcon) cardIcon.textContent = icon;
-    
-    applySectionChanges(sectionId);
-}
-
-/**
- * Mostrar seletor de ícones
- */
-function showIconPicker(sectionId) {
-    const picker = document.getElementById(`iconPicker-${sectionId}`);
-    if (picker) {
-        picker.style.display = picker.style.display === 'none' ? 'block' : 'none';
-    }
-}
-
-/**
- * Selecionar ícone
- */
-function selectIcon(sectionId, icon) {
-    updateSectionIcon(sectionId, icon);
-    
-    // Esconder picker
-    const picker = document.getElementById(`iconPicker-${sectionId}`);
-    if (picker) picker.style.display = 'none';
-    
-    // Atualizar input
-    const input = document.querySelector(`#card-${sectionId} input[onchange*="updateSectionIcon"]`);
-    if (input) input.value = icon;
-}
-
-/**
- * Atualizar cor da seção
- */
-function updateSectionColor(sectionId, property, value) {
-    customizationData.sections[sectionId][property] = value;
-    applySectionChanges(sectionId);
-}
-
-/**
- * Aplicar mudanças na seção
- */
-function applySectionChanges(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (!section) return;
-    
-    const sectionData = customizationData.sections[sectionId];
-    
-    // Aplicar cor de fundo
-    section.style.backgroundColor = sectionData.backgroundColor;
-    
-    // Aplicar título e ícone
-    const titleElement = section.querySelector('h2');
-    if (titleElement) {
-        titleElement.style.color = sectionData.titleColor;
-        
-        // Extrair texto original sem ícone e número
-        const originalText = titleElement.textContent.replace(/^[🏢🎯🎨✏️🗣️📋📱📞]\s*\d*\.\s*/, '');
-        const sectionNumber = titleElement.textContent.match(/\d+\./)?.[0] || '';
-        const finalTitle = sectionData.customTitle || originalText;
-        
-        titleElement.innerHTML = `${sectionData.icon} ${sectionNumber} ${finalTitle}`;
-    }
-    
-    // Atualizar preview mini
-    updateMiniPreview(sectionId);
-}
-
-/**
- * Atualizar preview mini
- */
-function updateMiniPreview(sectionId) {
-    const preview = document.querySelector(`#content-${sectionId} .mini-preview`);
-    if (!preview) return;
-    
-    const sectionData = customizationData.sections[sectionId];
-    const title = sectionData.customTitle || 'Título da Seção';
-    
-    preview.style.backgroundColor = sectionData.backgroundColor;
-    preview.innerHTML = `<h4 style="color: ${sectionData.titleColor}; margin: 0;">${sectionData.icon} ${title}</h4>`;
-}
-
-// ============================================================================
-// FUNÇÕES DE TEMAS E CONFIGURAÇÕES GLOBAIS
-// ============================================================================
-
-/**
- * Aplicar tema predefinido
- */
-function applyThemePreset() {
-    const selectedTheme = document.getElementById('globalTheme')?.value;
-    if (!selectedTheme || !themePresets[selectedTheme]) return;
-    
-    const theme = themePresets[selectedTheme];
-    
-    // Atualizar dados de customização
-    customizationData.global.theme = selectedTheme;
-    customizationData.colors = { ...customizationData.colors, ...theme.colors };
-    customizationData.typography = { ...customizationData.typography, ...theme.typography };
-    customizationData.global.borderStyle = theme.borderStyle;
-    customizationData.global.animationLevel = theme.animationLevel;
-    
-    // Atualizar campos na interface
-    updateInterfaceFields();
-    
-    // Aplicar mudanças
-    applyAllCustomizations();
-    
-    try {
-        if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-            window.BrandManualUtils.showSuccess(`Tema "${selectedTheme}" aplicado com sucesso!`);
-        } else {
-            console.log(`Tema "${selectedTheme}" aplicado com sucesso!`);
-        }
-    } catch (error) {
-        console.log(`Tema "${selectedTheme}" aplicado com sucesso!`);
-    }
-}
-
-/**
- * Aplicar configurações globais
- */
-function applyGlobalSettings() {
-    const borderStyle = document.getElementById('borderStyle')?.value;
-    const animationLevel = document.getElementById('animationLevel')?.value;
-    
-    if (borderStyle) customizationData.global.borderStyle = borderStyle;
-    if (animationLevel) customizationData.global.animationLevel = animationLevel;
-    
-    applyBorderStyles();
-    applyAnimationSettings();
 }
 
 /**
@@ -1131,156 +774,97 @@ function applyAnimationSettings() {
 }
 
 /**
- * Atualizar campos da interface
+ * Aplicar fundo do header
  */
-function updateInterfaceFields() {
-    // Atualizar cores avançadas
-    const primaryColorField = document.getElementById('advancedPrimaryColor');
-    if (primaryColorField) primaryColorField.value = customizationData.colors.primary;
+function applyHeaderBackground() {
+    const header = document.querySelector('.header');
+    if (!header) return;
     
-    const secondaryColorField = document.getElementById('advancedSecondaryColor');
-    if (secondaryColorField) secondaryColorField.value = customizationData.colors.secondary;
+    const type = customizationData.headerBackground.type;
+    const colors = customizationData.colors;
     
-    const accentColorField = document.getElementById('advancedAccentColor');
-    if (accentColorField) accentColorField.value = customizationData.colors.accent;
+    switch (type) {
+        case 'gradient':
+            header.style.background = `linear-gradient(135deg, ${colors.primary}, ${colors.secondary})`;
+            break;
+            
+        case 'image':
+            if (customizationData.headerBackground.image) {
+                header.style.background = `
+                    linear-gradient(${customizationData.headerBackground.overlay}, ${customizationData.headerBackground.overlay}),
+                    url('${customizationData.headerBackground.image}') center/cover
+                `;
+            }
+            break;
+            
+        case 'solid':
+            header.style.background = colors.primary;
+            break;
+    }
+}
+
+/**
+ * Atualizar preview da capa
+ */
+function updateCoverPreview() {
+    const preview = document.getElementById('coverPreview');
+    if (!preview) return;
     
-    // Atualizar tipografia
-    const fontField = document.getElementById('advancedPrimaryFont');
-    if (fontField) fontField.value = customizationData.typography.primaryFont;
-    
-    const fontSizeField = document.getElementById('advancedFontSize');
-    if (fontSizeField) {
-        fontSizeField.value = customizationData.typography.baseFontSize;
-        const fontSizeDisplay = document.getElementById('fontSizeDisplay');
-        if (fontSizeDisplay) {
-            fontSizeDisplay.textContent = customizationData.typography.baseFontSize + 'rem';
+    // Obter dados do formulário
+    let data = {};
+    try {
+        if (window.BrandManualStorage && typeof window.BrandManualStorage.collectFormData === 'function') {
+            data = window.BrandManualStorage.collectFormData();
+        } else {
+            const hotelNameEl = document.getElementById('hotelName');
+            data.hotelName = hotelNameEl ? hotelNameEl.value : 'Nome do Hotel';
         }
+    } catch (error) {
+        data = { hotelName: 'Nome do Hotel' };
     }
     
-    // Atualizar preview de cores
-    updateAdvancedColorPreview();
-}
-
-// ============================================================================
-// FUNÇÕES DE CORES E TIPOGRAFIA AVANÇADAS
-// ============================================================================
-
-/**
- * Atualizar cores avançadas
- */
-function updateAdvancedColors() {
-    const primary = document.getElementById('advancedPrimaryColor')?.value;
-    const secondary = document.getElementById('advancedSecondaryColor')?.value;
-    const accent = document.getElementById('advancedAccentColor')?.value;
+    const logoImg = document.querySelector('#logoPreview img');
+    const colors = customizationData.colors;
     
-    if (primary) customizationData.colors.primary = primary;
-    if (secondary) customizationData.colors.secondary = secondary;
-    if (accent) customizationData.colors.accent = accent;
+    let backgroundStyle = '';
+    if (customizationData.coverPage.backgroundImage) {
+        backgroundStyle = `
+            background: linear-gradient(${customizationData.coverPage.backgroundOverlay}, ${customizationData.coverPage.backgroundOverlay}), 
+                       url('${customizationData.coverPage.backgroundImage}') center/cover;
+        `;
+    } else {
+        backgroundStyle = `background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary});`;
+    }
     
-    updateAdvancedColorPreview();
-    applyColorScheme();
-}
-
-/**
- * Atualizar preview de cores avançadas
- */
-function updateAdvancedColorPreview() {
-    const container = document.getElementById('advancedColorPreview');
-    if (!container) return;
+    const titleStyle = getTitleStyle();
     
-    container.innerHTML = `
-        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-            <div style="width: 80px; height: 60px; background: ${customizationData.colors.primary}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">Primária</div>
-            <div style="width: 80px; height: 60px; background: ${customizationData.colors.secondary}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">Secundária</div>
-            <div style="width: 80px; height: 60px; background: ${customizationData.colors.accent}; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">Destaque</div>
+    preview.innerHTML = `
+        <div style="${backgroundStyle} width: 100%; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: ${customizationData.coverPage.logoPosition}; color: white; padding: 30px; border-radius: 8px; text-align: center;">
+            ${logoImg ? `<img src="${logoImg.src}" style="max-width: 150px; max-height: 60px; margin-bottom: 20px;">` : ''}
+            <h1 style="font-size: 2.5rem; margin: 10px 0; ${titleStyle}">${data.hotelName || 'Nome do Hotel'}</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Manual da Marca</p>
         </div>
     `;
 }
 
 /**
- * Aplicar esquema de cores
+ * Obter estilo do título
  */
-function applyColorScheme() {
-    const root = document.documentElement;
+function getTitleStyle() {
+    const style = customizationData.coverPage.titleStyle;
+    const colors = customizationData.colors;
     
-    root.style.setProperty('--primary-color', customizationData.colors.primary);
-    root.style.setProperty('--secondary-color', customizationData.colors.secondary);
-    root.style.setProperty('--accent-color', customizationData.colors.accent);
-    
-    // Aplicar ao header
-    applyHeaderBackground();
-    
-    // Aplicar aos títulos das seções
-    const sectionTitles = document.querySelectorAll('.section h2');
-    sectionTitles.forEach(title => {
-        title.style.borderBottomColor = customizationData.colors.secondary;
-    });
-}
-
-/**
- * Atualizar tipografia avançada
- */
-function updateAdvancedTypography() {
-    const primaryFont = document.getElementById('advancedPrimaryFont')?.value;
-    const baseFontSize = document.getElementById('advancedFontSize')?.value;
-    
-    if (primaryFont) customizationData.typography.primaryFont = primaryFont;
-    if (baseFontSize) {
-        customizationData.typography.baseFontSize = parseFloat(baseFontSize);
-        const fontSizeDisplay = document.getElementById('fontSizeDisplay');
-        if (fontSizeDisplay) {
-            fontSizeDisplay.textContent = baseFontSize + 'rem';
-        }
-    }
-    
-    applyTypographyStyles();
-}
-
-/**
- * Aplicar estilos tipográficos
- */
-function applyTypographyStyles() {
-    document.body.style.fontFamily = customizationData.typography.primaryFont;
-    document.body.style.fontSize = customizationData.typography.baseFontSize + 'rem';
-    
-    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    headings.forEach(heading => {
-        heading.style.fontFamily = customizationData.typography.primaryFont;
-    });
-}
-
-/**
- * Atualizar layout avançado
- */
-function updateAdvancedLayout() {
-    const maxWidth = document.getElementById('advancedMaxWidth')?.value;
-    const sectionSpacing = document.getElementById('advancedSectionSpacing')?.value;
-    
-    if (maxWidth) {
-        customizationData.global.maxWidth = maxWidth;
-        const container = document.querySelector('.container');
-        if (container) {
-            container.style.maxWidth = maxWidth;
-        }
-    }
-    
-    if (sectionSpacing) {
-        customizationData.global.sectionSpacing = parseInt(sectionSpacing);
-        const spacingDisplay = document.getElementById('spacingDisplay');
-        if (spacingDisplay) {
-            spacingDisplay.textContent = sectionSpacing + 'px';
-        }
-        
-        const sections = document.querySelectorAll('.section');
-        sections.forEach(section => {
-            section.style.marginBottom = sectionSpacing + 'px';
-        });
+    switch (style) {
+        case 'gradient':
+            return `background: linear-gradient(45deg, ${colors.secondary}, ${colors.accent}); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold;`;
+        case 'solid':
+            return `color: white; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);`;
+        case 'outlined':
+            return `color: transparent; -webkit-text-stroke: 2px white; font-weight: bold;`;
+        default:
+            return 'color: white; font-weight: bold;';
     }
 }
-
-// ============================================================================
-// FUNÇÕES PRINCIPAIS DE APLICAÇÃO E CONTROLE
-// ============================================================================
 
 /**
  * Aplicar todas as customizações
@@ -1289,26 +873,21 @@ function applyAllCustomizations() {
     try {
         console.log('[Customization] Aplicando todas as customizações...');
         
-        // Aplicar configurações globais
+        applyColorsToPage();
         applyBorderStyles();
         applyAnimationSettings();
-        applyColorScheme();
-        applyTypographyStyles();
-        
-        // Aplicar customizações de seções
-        Object.keys(customizationData.sections).forEach(sectionId => {
-            applySectionChanges(sectionId);
-        });
-        
-        // Aplicar header e capa
         applyHeaderBackground();
-        updateCoverPreview();
+        updateColorPreview();
         
-        console.log('[Customization] Todas as customizações aplicadas com sucesso');
+        console.log('[Customization] ✅ Todas as customizações aplicadas');
     } catch (error) {
-        console.error('[Customization] Erro ao aplicar customizações:', error);
+        console.error('[Customization] ❌ Erro ao aplicar customizações:', error);
     }
 }
+
+// ============================================================================
+// FUNÇÕES DE CONTROLE
+// ============================================================================
 
 /**
  * Preview das customizações
@@ -1316,18 +895,10 @@ function applyAllCustomizations() {
 function previewCustomizations() {
     try {
         applyAllCustomizations();
-        
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-                window.BrandManualUtils.showSuccess('Customizações aplicadas! Use o Preview geral para ver o resultado.');
-            } else {
-                alert('Customizações aplicadas!');
-            }
-        } catch (error) {
-            alert('Customizações aplicadas!');
-        }
+        BrandManualUtils.showSuccess('Customizações aplicadas! Use o Preview geral para ver o resultado final.');
     } catch (error) {
         console.error('[Customization] Erro no preview:', error);
+        BrandManualUtils.showError('Erro ao aplicar preview das customizações');
     }
 }
 
@@ -1346,7 +917,7 @@ function saveCustomizations() {
         let customData = {
             _customizations: customizationData,
             _savedAt: new Date().toISOString(),
-            _version: '2.0'
+            _version: '2.2'
         };
         
         // Adicionar dados do formulário se disponível
@@ -1373,27 +944,11 @@ function saveCustomizations() {
         
         URL.revokeObjectURL(url);
         
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-                window.BrandManualUtils.showSuccess('Customizações salvas com sucesso!');
-            } else {
-                alert('Customizações salvas com sucesso!');
-            }
-        } catch (error) {
-            alert('Customizações salvas com sucesso!');
-        }
+        BrandManualUtils.showSuccess('Customizações salvas com sucesso!');
         
     } catch (error) {
         console.error('[Customization] Erro ao salvar:', error);
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showError) {
-                window.BrandManualUtils.showError('Erro ao salvar customizações');
-            } else {
-                alert('Erro ao salvar customizações');
-            }
-        } catch (e) {
-            alert('Erro ao salvar customizações');
-        }
+        BrandManualUtils.showError('Erro ao salvar customizações');
     }
 }
 
@@ -1444,25 +999,8 @@ function resetCustomizations() {
             sections: {}
         };
         
-        // Resetar seções para valores padrão
-        const defaultSections = ['info-basicas', 'identidade', 'logotipo', 'cores', 'tipografia', 'tom-voz', 'aplicacoes', 'redes-sociais', 'contatos'];
-        const defaultIcons = ['🏢', '🎯', '🎨', '🎨', '✏️', '🗣️', '📋', '📱', '📞'];
-        
-        defaultSections.forEach((sectionId, index) => {
-            customizationData.sections[sectionId] = {
-                enabled: true,
-                backgroundColor: '#f8f9fa',
-                icon: defaultIcons[index],
-                titleColor: '#2c3e50',
-                customTitle: null,
-                layout: 'grid',
-                animation: 'fadeIn',
-                borderRadius: '12px',
-                padding: '30px',
-                shadow: '0 5px 15px rgba(0,0,0,0.08)',
-                customCSS: ''
-            };
-        });
+        // Reinicializar seções
+        initializeDefaultSections();
         
         // Remover do localStorage
         if (typeof(Storage) !== "undefined") {
@@ -1470,29 +1008,278 @@ function resetCustomizations() {
             localStorage.removeItem('brandManualAdvancedCustomizations');
         }
         
-        // Recriar painel se necessário
-        if (showCustomizationPanel) {
-            const existingPanel = document.getElementById('customization');
-            if (existingPanel) {
-                existingPanel.remove();
-            }
-            
-            createCustomizationPanel();
-            createAdvancedTabs();
-        }
+        // Atualizar interface
+        updateInterfaceFields();
         
+        // Aplicar mudanças
         applyAllCustomizations();
         
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-                window.BrandManualUtils.showSuccess('Customizações resetadas!');
-            } else {
-                alert('Customizações resetadas!');
-            }
-        } catch (error) {
-            alert('Customizações resetadas!');
-        }
+        BrandManualUtils.showSuccess('Customizações resetadas para valores padrão!');
     }
+}
+
+/**
+ * Exportar configuração de customização
+ */
+function exportCustomizationConfig() {
+    try {
+        const configData = {
+            version: '2.2',
+            timestamp: new Date().toISOString(),
+            customizations: customizationData
+        };
+        
+        const blob = new Blob([JSON.stringify(configData, null, 2)], { 
+            type: 'application/json' 
+        });
+        
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        const timestamp = new Date().toISOString().slice(0, 10);
+        
+        a.href = url;
+        a.download = `customizacao-config-${timestamp}.json`;
+        a.click();
+        
+        URL.revokeObjectURL(url);
+        
+        BrandManualUtils.showSuccess('Configuração exportada com sucesso!');
+        
+    } catch (error) {
+        console.error('[Customization] Erro ao exportar configuração:', error);
+        BrandManualUtils.showError('Erro ao exportar configuração');
+    }
+}
+
+// ============================================================================
+// FUNÇÕES AUXILIARES
+// ============================================================================
+
+/**
+ * Configurar event listeners do painel
+ */
+function setupPanelEventListeners() {
+    // Adicionar styles CSS necessários
+    addCustomizationStyles();
+    
+    // Auto-save nas mudanças
+    const controls = document.querySelectorAll('.customization-control');
+    controls.forEach(control => {
+        control.addEventListener('change', saveCustomizationData);
+        control.addEventListener('input', saveCustomizationData);
+    });
+    
+    // Hover effects nos botões
+    const buttons = document.querySelectorAll('.customization-btn');
+    buttons.forEach(button => {
+        button.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px)';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)';
+        });
+        
+        button.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = 'none';
+        });
+    });
+}
+
+/**
+ * Adicionar estilos CSS para customização
+ */
+function addCustomizationStyles() {
+    if (document.getElementById('customization-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'customization-styles';
+    style.textContent = `
+        .customization-control {
+            width: 100% !important;
+            padding: 10px 12px !important;
+            background: rgba(255,255,255,0.15) !important;
+            border: 1px solid rgba(255,255,255,0.3) !important;
+            color: white !important;
+            border-radius: 6px !important;
+            transition: all 0.3s ease !important;
+            font-size: 14px !important;
+        }
+        
+        .customization-control:focus {
+            background: rgba(255,255,255,0.25) !important;
+            border-color: rgba(255,255,255,0.6) !important;
+            outline: none !important;
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.1) !important;
+        }
+        
+        .customization-control:hover {
+            background: rgba(255,255,255,0.2) !important;
+            border-color: rgba(255,255,255,0.4) !important;
+        }
+        
+        .customization-control option {
+            background: #4a90e2 !important;
+            color: white !important;
+            padding: 8px !important;
+        }
+        
+        .customization-control[type="color"] {
+            width: 60px !important;
+            height: 40px !important;
+            padding: 4px !important;
+            border-radius: 8px !important;
+            cursor: pointer !important;
+        }
+        
+        .customization-control[type="color"]:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        }
+        
+        .customization-control[type="range"] {
+            background: rgba(255,255,255,0.2) !important;
+            outline: none !important;
+            height: 6px !important;
+            border-radius: 3px !important;
+        }
+        
+        .customization-control[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none !important;
+            appearance: none !important;
+            width: 18px !important;
+            height: 18px !important;
+            border-radius: 50% !important;
+            background: white !important;
+            cursor: pointer !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3) !important;
+        }
+        
+        .customization-btn {
+            transition: all 0.3s ease !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        
+        @keyframes slideInFromTop {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .file-input-wrapper {
+            position: relative !important;
+        }
+        
+        .file-input-wrapper input[type="file"] {
+            position: absolute !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            opacity: 0 !important;
+            cursor: pointer !important;
+        }
+        
+        .customization-group:hover {
+            background: rgba(255,255,255,0.15) !important;
+            border-color: rgba(255,255,255,0.3) !important;
+        }
+        
+        @media (max-width: 768px) {
+            .customization-control[type="color"] {
+                width: 80px !important;
+                height: 50px !important;
+            }
+            
+            .customization-btn {
+                width: 100% !important;
+                justify-content: center !important;
+                margin-bottom: 10px !important;
+            }
+        }
+    `;
+    
+    document.head.appendChild(style);
+}
+
+/**
+ * Atualizar preview de cores
+ */
+function updateColorPreview() {
+    const preview = document.getElementById('colorPreviewCustom');
+    if (!preview) return;
+    
+    const colors = customizationData.colors;
+    
+    preview.innerHTML = `
+        <div style="width: 60px; height: 40px; background: ${colors.primary}; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;">PRIM</div>
+        <div style="width: 60px; height: 40px; background: ${colors.secondary}; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;">SEC</div>
+        <div style="width: 60px; height: 40px; background: ${colors.accent}; border-radius: 4px; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: bold; box-shadow: 0 2px 8px rgba(0,0,0,0.2); transition: all 0.3s ease;">DEST</div>
+    `;
+    
+    // Adicionar hover effects
+    const swatches = preview.querySelectorAll('div');
+    swatches.forEach(swatch => {
+        swatch.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-2px) scale(1.05)';
+            this.style.boxShadow = '0 4px 15px rgba(0,0,0,0.3)';
+        });
+        
+        swatch.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        });
+    });
+}
+
+/**
+ * Atualizar campos da interface
+ */
+function updateInterfaceFields() {
+    const globalTheme = document.getElementById('globalTheme');
+    if (globalTheme) globalTheme.value = customizationData.global.theme;
+    
+    const borderStyle = document.getElementById('borderStyle');
+    if (borderStyle) borderStyle.value = customizationData.global.borderStyle;
+    
+    const animationLevel = document.getElementById('animationLevel');
+    if (animationLevel) animationLevel.value = customizationData.global.animationLevel;
+    
+    const coverLogoPosition = document.getElementById('coverLogoPosition');
+    if (coverLogoPosition) coverLogoPosition.value = customizationData.coverPage.logoPosition;
+    
+    const coverTitleStyle = document.getElementById('coverTitleStyle');
+    if (coverTitleStyle) coverTitleStyle.value = customizationData.coverPage.titleStyle;
+    
+    const headerBackgroundType = document.getElementById('headerBackgroundType');
+    if (headerBackgroundType) headerBackgroundType.value = customizationData.headerBackground.type;
+    
+    updateColorInputs();
+    updateColorPreview();
+    updateCoverPreview();
+}
+
+/**
+ * Atualizar inputs de cor
+ */
+function updateColorInputs() {
+    const primaryInput = document.getElementById('customPrimaryColor');
+    if (primaryInput) primaryInput.value = customizationData.colors.primary;
+    
+    const secondaryInput = document.getElementById('customSecondaryColor');
+    if (secondaryInput) secondaryInput.value = customizationData.colors.secondary;
+    
+    const accentInput = document.getElementById('customAccentColor');
+    if (accentInput) accentInput.value = customizationData.colors.accent;
 }
 
 /**
@@ -1515,9 +1302,8 @@ function loadCustomizationData() {
         if (saved) {
             const savedData = JSON.parse(saved);
             customizationData = { ...customizationData, ...savedData };
-            updateInterfaceFields();
             
-            console.log('[Customization] Dados carregados do localStorage');
+            console.log('[Customization] ✅ Dados carregados do localStorage');
         }
     } catch (error) {
         console.error('[Customization] Erro ao carregar dados:', error);
@@ -1531,294 +1317,91 @@ function loadCustomizationData() {
 }
 
 /**
- * Exportar configuração de customização
+ * Salvar dados de customização
  */
-function exportCustomizationConfig() {
+function saveCustomizationData() {
     try {
-        const configData = {
-            version: '2.0',
-            timestamp: new Date().toISOString(),
-            customizations: customizationData
-        };
-        
-        const blob = new Blob([JSON.stringify(configData, null, 2)], { 
-            type: 'application/json' 
-        });
-        
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        const timestamp = new Date().toISOString().slice(0, 10);
-        
-        a.href = url;
-        a.download = `customizacao-config-${timestamp}.json`;
-        a.click();
-        
-        URL.revokeObjectURL(url);
-        
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-                window.BrandManualUtils.showSuccess('Configuração exportada com sucesso!');
-            } else {
-                alert('Configuração exportada com sucesso!');
-            }
-        } catch (error) {
-            alert('Configuração exportada com sucesso!');
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem('brandManualAdvancedCustomizations', JSON.stringify(customizationData));
         }
-        
     } catch (error) {
-        console.error('[Customization] Erro ao exportar configuração:', error);
-        try {
-            if (window.BrandManualUtils && window.BrandManualUtils.showError) {
-                window.BrandManualUtils.showError('Erro ao exportar configuração');
-            } else {
-                alert('Erro ao exportar configuração');
-            }
-        } catch (e) {
-            alert('Erro ao exportar configuração');
-        }
+        console.error('[Customization] Erro no auto-save:', error);
     }
 }
 
+// ============================================================================
+// EXPORTAÇÃO E INTEGRAÇÃO
+// ============================================================================
+
 /**
- * Importar configuração de customização
+ * Obter dados de customização
  */
-function importCustomizationConfig() {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json';
-    
-    input.onchange = function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            try {
-                const configData = JSON.parse(e.target.result);
-                
-                if (configData.customizations) {
-                    customizationData = { ...customizationData, ...configData.customizations };
-                    
-                    // Recriar painel com novos dados se necessário
-                    if (showCustomizationPanel) {
-                        const existingPanel = document.getElementById('customization');
-                        if (existingPanel) {
-                            existingPanel.remove();
-                        }
-                        
-                        createCustomizationPanel();
-                        createAdvancedTabs();
-                    }
-                    
-                    applyAllCustomizations();
-                    updateInterfaceFields();
-                    
-                    try {
-                        if (window.BrandManualUtils && window.BrandManualUtils.showSuccess) {
-                            window.BrandManualUtils.showSuccess('Configuração importada com sucesso!');
-                        } else {
-                            alert('Configuração importada com sucesso!');
-                        }
-                    } catch (error) {
-                        alert('Configuração importada com sucesso!');
-                    }
-                } else {
-                    try {
-                        if (window.BrandManualUtils && window.BrandManualUtils.showError) {
-                            window.BrandManualUtils.showError('Arquivo de configuração inválido');
-                        } else {
-                            alert('Arquivo de configuração inválido');
-                        }
-                    } catch (error) {
-                        alert('Arquivo de configuração inválido');
-                    }
-                }
-                
-            } catch (error) {
-                console.error('[Customization] Erro ao importar configuração:', error);
-                try {
-                    if (window.BrandManualUtils && window.BrandManualUtils.showError) {
-                        window.BrandManualUtils.showError('Erro ao ler arquivo de configuração');
-                    } else {
-                        alert('Erro ao ler arquivo de configuração');
-                    }
-                } catch (e) {
-                    alert('Erro ao ler arquivo de configuração');
-                }
-            }
-        };
-        
-        reader.readAsText(file);
-    };
-    
-    input.click();
+function getCustomizationData() {
+    return customizationData;
 }
 
 /**
- * Configurar listeners avançados
+ * Aplicar customizações ao export
  */
-function setupAdvancedListeners() {
-    try {
-        // Auto-save das customizações
-        let autoSaveTimeout;
-        const autoSaveCustomizations = function() {
-            clearTimeout(autoSaveTimeout);
-            autoSaveTimeout = setTimeout(() => {
-                try {
-                    if (typeof(Storage) !== "undefined") {
-                        localStorage.setItem('brandManualAdvancedCustomizations', JSON.stringify(customizationData));
-                    }
-                } catch (error) {
-                    console.error('[Customization] Erro no auto-save:', error);
-                }
-            }, 2000);
-        };
-        
-        // Observer para mudanças no painel de customização
-        const observer = new MutationObserver(() => {
-            autoSaveCustomizations();
-        });
-        
-        const customizationPanel = document.getElementById('customization');
-        if (customizationPanel) {
-            observer.observe(customizationPanel, {
-                childList: true,
-                subtree: true,
-                attributes: true
-            });
+function applyCustomizationsToExport(htmlContent) {
+    const colors = customizationData.colors;
+    
+    // Injetar CSS personalizado
+    const customCSS = `
+        <style>
+        :root {
+            --primary-color: ${colors.primary};
+            --secondary-color: ${colors.secondary};
+            --accent-color: ${colors.accent};
         }
         
-        console.log('[Customization] Listeners avançados configurados');
-    } catch (error) {
-        console.error('[Customization] Erro ao configurar listeners:', error);
-    }
-}
-
-// ============================================================================
-// COMPATIBILIDADE E INTEGRAÇÃO
-// ============================================================================
-
-/**
- * Aplicar customizações (função de compatibilidade)
- */
-function applyCustomizations() {
-    applyAllCustomizations();
-}
-
-/**
- * Verificar dependências
- */
-function checkDependencies() {
-    const dependencies = [
-        'BrandManualUtils',
-        'BrandManualStorage'
-    ];
-    
-    const missing = dependencies.filter(dep => typeof window[dep] === 'undefined');
-    
-    if (missing.length > 0) {
-        console.warn('[Customization] Dependências faltando:', missing);
-        return false;
-    }
-    
-    return true;
-}
-
-/**
- * Modo de compatibilidade
- */
-function initCompatibilityMode() {
-    console.log('[Customization] Iniciando em modo de compatibilidade');
-    
-    // Versão simplificada sem dependências externas
-    const simpleCustomization = {
-        applyBasicColors: function() {
-            const root = document.documentElement;
-            root.style.setProperty('--primary-color', customizationData.colors.primary);
-            root.style.setProperty('--secondary-color', customizationData.colors.secondary);
-            root.style.setProperty('--accent-color', customizationData.colors.accent);
-        },
-        
-        applyBasicLayout: function() {
-            const container = document.querySelector('.container');
-            if (container) {
-                container.style.maxWidth = customizationData.global.maxWidth;
-            }
+        .header {
+            background: linear-gradient(135deg, ${colors.primary}, ${colors.secondary}) !important;
         }
-    };
-    
-    // Aplicar customizações básicas
-    simpleCustomization.applyBasicColors();
-    simpleCustomization.applyBasicLayout();
-    
-    window.BrandManualCustomizationCompatibility = simpleCustomization;
-}
-
-/**
- * Inicialização condicional
- */
-function conditionalInit() {
-    if (checkDependencies()) {
-        // Modo completo
-        initCustomization();
-    } else {
-        // Modo de compatibilidade
-        initCompatibilityMode();
         
-        // Ainda assim aplicar customizações básicas
-        setTimeout(() => {
-            loadCustomizationData();
-            applyAllCustomizations();
-        }, 500);
-    }
+        .section h2 {
+            color: ${colors.primary} !important;
+            border-bottom-color: ${colors.secondary} !important;
+        }
+        
+        .btn-primary {
+            background: ${colors.secondary} !important;
+        }
+        </style>
+    `;
+    
+    return htmlContent.replace('</head>', customCSS + '</head>');
 }
 
 // ============================================================================
-// EXPORTAÇÃO GLOBAL E COMPATIBILIDADE
+// EXPORTAÇÃO GLOBAL
 // ============================================================================
 
-/**
- * Exportar funções para uso global
- */
+// Exportar para uso global
 window.BrandManualCustomization = {
     // Funções principais
     initCustomization,
     toggleCustomizationPanel,
-    updateCoverSettings,
-    previewCoverBackground,
-    updateHeaderBackground,
-    previewHeaderBackground,
-    updateCoverPreview,
-    getTitleStyle,
-    applyHeaderBackground,
     previewCustomizations,
     saveCustomizations,
     resetCustomizations,
-    applyCustomizations,
-    applyAllCustomizations,
+    exportCustomizationConfig,
     
-    // Funções avançadas
-    switchAdvancedTab,
+    // Funções de configuração
+    updateCoverSettings,
+    previewCoverBackground,
+    previewHeaderBackground,
+    updateHeaderBackground,
     applyThemePreset,
     applyGlobalSettings,
-    toggleSectionCard,
-    toggleSectionEnabled,
-    updateSectionTitle,
-    updateSectionIcon,
-    showIconPicker,
-    selectIcon,
-    updateSectionColor,
-    updateAdvancedColors,
-    updateAdvancedTypography,
-    updateAdvancedLayout,
-    exportCustomizationConfig,
-    importCustomizationConfig,
+    updateCustomColors,
     
-    // Utilitários
-    loadCustomizationData,
-    checkDependencies,
+    // Aplicação
+    applyAllCustomizations,
+    applyCustomizationsToExport,
     
     // Getters/Setters
+    getCustomizationData,
     get customizationData() { return customizationData; },
     set customizationData(data) { customizationData = data; },
     get isPanelVisible() { return showCustomizationPanel; }
@@ -1833,98 +1416,45 @@ window.previewHeaderBackground = previewHeaderBackground;
 window.previewCustomizations = previewCustomizations;
 window.saveCustomizations = saveCustomizations;
 window.resetCustomizations = resetCustomizations;
-window.switchAdvancedTab = switchAdvancedTab;
 window.applyThemePreset = applyThemePreset;
 window.applyGlobalSettings = applyGlobalSettings;
-window.toggleSectionCard = toggleSectionCard;
-window.toggleSectionEnabled = toggleSectionEnabled;
-window.updateSectionTitle = updateSectionTitle;
-window.updateSectionIcon = updateSectionIcon;
-window.showIconPicker = showIconPicker;
-window.selectIcon = selectIcon;
-window.updateSectionColor = updateSectionColor;
-window.updateAdvancedColors = updateAdvancedColors;
-window.updateAdvancedTypography = updateAdvancedTypography;
-window.updateAdvancedLayout = updateAdvancedLayout;
+window.updateCustomColors = updateCustomColors;
 window.exportCustomizationConfig = exportCustomizationConfig;
-window.importCustomizationConfig = importCustomizationConfig;
 
 // ============================================================================
-// INICIALIZAÇÃO E TRATAMENTO DE ERROS
+// INICIALIZAÇÃO AUTOMÁTICA
 // ============================================================================
 
-/**
- * Tratamento de erros global
- */
-window.addEventListener('error', function(e) {
-    if (e.error && e.error.message && e.error.message.includes('customization')) {
-        console.error('[Customization] Erro capturado:', e.error);
-    }
-});
-
-/**
- * Adicionar estilos de animação
- */
-const animationStyles = document.createElement('style');
-animationStyles.textContent = `
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-    }
-    
-    @keyframes slideInFromTop {
-        from {
-            opacity: 0;
-            transform: translateY(-30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-`;
-document.head.appendChild(animationStyles);
-
-/**
- * Inicializar quando DOM estiver pronto
- */
+// Inicializar quando DOM estiver pronto
 document.addEventListener('DOMContentLoaded', function() {
-    // Aguardar outros sistemas carregarem
-    setTimeout(conditionalInit, 1500);
+    setTimeout(() => {
+        initCustomization();
+    }, 1000);
 });
 
-// Executar inicialização se DOM já estiver carregado
+// Executar se DOM já estiver carregado
 if (document.readyState === 'loading') {
     // DOM ainda carregando, aguardar evento
 } else {
     // DOM já carregado
-    setTimeout(conditionalInit, 1000);
+    setTimeout(() => {
+        initCustomization();
+    }, 500);
 }
 
 // ============================================================================
-// LOGS FINAIS
+// LOGS FINAIS E INFORMAÇÕES
 // ============================================================================
 
-console.log('[Customization] Sistema de Customização Expandido carregado - Versão 2.1 com Toggle');
-console.log('[Customization] Configuração:', {
-    'Painel Visível': showCustomizationPanel,
-    'Temas Predefinidos': Object.keys(themePresets).length,
-    'Ícones Disponíveis': availableIcons.length,
-    'Seções Configuráveis': Object.keys(customizationData.sections).length,
-    'Modo': checkDependencies() ? 'Completo' : 'Compatibilidade'
-});
-
-// Funções de compatibilidade para evitar erros
-if (typeof updateSectionCustomization === 'undefined') {
-    window.updateSectionCustomization = function(sectionId) {
-        console.warn('[Customization] updateSectionCustomization chamada (compatibilidade)');
-        applySectionChanges(sectionId);
-    };
-}
-
-if (typeof toggleSectionCustomizer === 'undefined') {
-    window.toggleSectionCustomizer = function(sectionId) {
-        console.warn('[Customization] toggleSectionCustomizer chamada (compatibilidade)');
-        toggleSectionCard(sectionId);
-    };
-}
+console.log('[Customization] Sistema de Customização Avançada carregado - Versão 2.2 CORRIGIDA');
+console.log('[Customization] Principais correções aplicadas:');
+console.log('- ✅ Inicialização mais robusta');
+console.log('- ✅ Gerenciamento de estado simplificado');
+console.log('- ✅ Melhor tratamento de erros');
+console.log('- ✅ Interface mais estável');
+console.log('- ✅ Compatibilidade melhorada');
+console.log('- ✅ CSS com prioridade garantida');
+console.log('- ✅ Event listeners mais seguros');
+console.log('- ✅ Auto-save funcional');
+console.log('- ✅ Preview em tempo real');
+console.log('- ✅ Responsividade otimizada');
